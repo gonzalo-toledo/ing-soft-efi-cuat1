@@ -37,6 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    #aplicaciones propias
+    'aviones',
+    'home',
+    'pasajeros',
+    'vuelos',
+    'reservas',
 ]
 
 MIDDLEWARE = [
@@ -54,10 +61,11 @@ ROOT_URLCONF = 'aerolinea.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'DIRS': [BASE_DIR / 'templates'], #ruta donde se guardan los templates
+        'APP_DIRS': True, # permite que busque templates dentro de las aplicaciones instaladas
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug', #sirve para mostrar errores en el template
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',

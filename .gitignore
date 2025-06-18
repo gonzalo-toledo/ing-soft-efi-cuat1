@@ -1,0 +1,28 @@
+# Entornos virtuales
+.venv/
+env/
+venv/
+
+# Archivos de Python
+__pycache__/
+*.py[cod]
+
+# Archivos de la base de datos (si usás SQLite)
+*.sqlite3
+
+# Archivos temporales
+*.log
+*.pot
+*.pyc
+*.pyo
+*.orig
+*.swp
+*.tmp
+*.bak
+
+# Archivos de usuario
+media/
+
+# Configs de IDE
+.vscode/
+.idea/

@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from home.forms import RegisterForm
+from home.forms import LoginForm, RegisterForm
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 # Create your views here.
 
@@ -38,3 +39,41 @@ class RegisterView(View):
 
             return render(request, 'account/register.html', {'form': form})
             
+class LoginView(View):
+    def get(self, request):
+        form = LoginForm()
+        return render(
+            request,
+            'account/login.html',
+            {'form': form}
+        )
+    
+    def post(self, request):
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            
+            user = authenticate ( 
+                request,
+                username = username,
+                password = password
+            )
+            if user is not None:
+                login(request, user)
+                return redirect('index')
+            else:
+                messages.error(request, 'Credenciales incorrectas')
+                return redirect('login')
+        else:
+            # Este bloque toma los errores del formulario y los agrega al sistema de mensajes
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{form.fields[field].label}: {error}" if field in form.fields else error)
+
+            return render(request, 'account/login.html', {'form': form})
+        
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect('index')

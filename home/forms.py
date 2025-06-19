@@ -51,3 +51,25 @@ class RegisterForm(forms.Form):
         if User.objects.filter(email=cleaned_data.get('email')).exists():
             raise ValidationError('El correo electrónico ya está en uso')
         return cleaned_data
+    
+    
+class LoginForm(forms.Form):
+    username = forms.CharField(
+        max_length=50,
+        label='Nombre de usuario',
+        widget=forms.TextInput(
+            attrs={'class': 'form-control',
+                'placeholder': 'Ingrese su nombre de usuario'
+            }
+        )
+    )
+
+    password = forms.CharField(
+        max_length=50,
+        label='Contraseña',
+        widget=forms.PasswordInput(
+            attrs={'class': 'form-control',
+                'placeholder': 'Ingrese su contraseña'
+            }
+        )
+    )

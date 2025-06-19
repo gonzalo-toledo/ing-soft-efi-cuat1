@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from home.forms import RegisterForm
 from django.contrib.auth.models import User
@@ -14,7 +14,7 @@ class HomeView(View):
 
 class RegisterView(View):
     def get(self, request):
-        form = RegisterForm
+        form = RegisterForm()
         return render(
             request,
             'account/register.html',
@@ -29,9 +29,12 @@ class RegisterView(View):
                 email = form.cleaned_data.get('email'),
             )
             messages.success(request, 'Usuario registrado correctamente')
-            return render(
-                request,
-                'account/register.html',
-                {'form': form}
-            )
-    
+            return redirect('index')
+        else:
+            # Este bloque toma los errores del formulario y los agrega al sistema de mensajes
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{form.fields[field].label}: {error}" if field in form.fields else error)
+
+            return render(request, 'account/register.html', {'form': form})
+            

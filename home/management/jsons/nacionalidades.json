@@ -1,0 +1,52 @@
+[
+  {
+    "codigo": "AR",
+    "pais": "Argentina",
+    "gentilicio": "Argentino/a"
+  },
+  {
+    "codigo": "BR",
+    "pais": "Brasil",
+    "gentilicio": "Brasileño/a"
+  },
+  {
+    "codigo": "CL",
+    "pais": "Chile",
+    "gentilicio": "Chileno/a"
+  },
+  {
+    "codigo": "US",
+    "pais": "Estados Unidos",
+    "gentilicio": "Estadounidense"
+  },
+  {
+    "codigo": "FR",
+    "pais": "Francia",
+    "gentilicio": "Francés/Francesa"
+  },
+  {
+    "codigo": "DE",
+    "pais": "Alemania",
+    "gentilicio": "Alemán/Alemana"
+  },
+  {
+    "codigo": "IT",
+    "pais": "Italia",
+    "gentilicio": "Italiano/a"
+  },
+  {
+    "codigo": "ES",
+    "pais": "España",
+    "gentilicio": "Español/a"
+  },
+  {
+    "codigo": "JP",
+    "pais": "Japón",
+    "gentilicio": "Japonés/Japonesa"
+  },
+  {
+    "codigo": "CN",
+    "pais": "China",
+    "gentilicio": "Chino/a"
+  }
+]

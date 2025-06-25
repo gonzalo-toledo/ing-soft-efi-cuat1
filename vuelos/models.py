@@ -1,10 +1,26 @@
 from django.db import models
-from aviones.models import Avion
+from aviones.models import (
+    Avion,
+)
 
+    
+class Aeropuerto(models.Model):
+    iata = models.CharField(max_length=3, unique=True)
+    nombre = models.CharField(max_length=255)
+    ciudad = models.CharField(max_length=100)
+    provincia = models.CharField(max_length=100)
+    pais = models.CharField(max_length=100)
+    latitud = models.FloatField()
+    longitud = models.FloatField()
+    tipo = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f"{self.iata} - {self.nombre}"
+    
 class Vuelo(models.Model):
     avion = models.ForeignKey(Avion, on_delete=models.CASCADE)
-    origen = models.CharField(max_length=100)
-    destino = models.CharField(max_length=100)
+    origen = models.ForeignKey(Aeropuerto, on_delete=models.CASCADE, related_name='vuelos_origen')
+    destino = models.ForeignKey(Aeropuerto, on_delete=models.CASCADE, related_name='vuelos_destino')
     fecha_salida = models.DateTimeField()
     fecha_llegada = models.DateTimeField()
     duracion = models.DurationField(blank=True, null=True)  # Duración del vuelo
@@ -24,3 +40,4 @@ class Vuelo(models.Model):
     
     def __str__(self):
         return f"Vuelo de {self.origen} a {self.destino} ({self.fecha_salida.strftime('%Y-%m-%d %H:%M')})"
+    

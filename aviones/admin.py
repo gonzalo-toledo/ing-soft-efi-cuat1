@@ -13,8 +13,7 @@ class AvionAdmin(admin.ModelAdmin):
 
 @admin.register(Asiento)
 class AsientoAdmin(admin.ModelAdmin):
-    list_display = ('numero', 'fila', 'columna', 'tipo', 'estado')
-    search_fields = ('numero', 'tipo', 'estado')
-    list_filter = ('tipo', 'estado')
-    ordering = ('-estado',)
+    list_display = ('numero', 'fila', 'columna', 'tipo')
+    search_fields = ('numero', 'tipo')
+    list_filter = ('tipo',)
     list_per_page = 20

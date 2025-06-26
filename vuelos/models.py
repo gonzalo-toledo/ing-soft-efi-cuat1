@@ -39,5 +39,5 @@ class Vuelo(models.Model):
         super().save(*args, **kwargs)
     
     def __str__(self):
-        return f"Vuelo de {self.origen} a {self.destino} ({self.fecha_salida.strftime('%Y-%m-%d %H:%M')})"
+        return f"Vuelo de {self.origen} a {self.destino}, Avión: {self.avion.modelo} ({self.fecha_salida.strftime('%Y-%m-%d %H:%M')})"
     

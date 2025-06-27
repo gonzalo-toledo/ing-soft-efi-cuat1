@@ -35,10 +35,16 @@
                 <ul class="navbar-nav me-auto"> <!-- Elementos a la izquierda -->
                     <!-- {% if user.is_authenticated %} -->
                         <li class="nav-item">
-                            <a class="nav-link" href="">Vuelos</a>
+                            <a class="nav-link" href="{% url 'index' %}">Index</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="">Mis reservas</a>
+                            <a class="nav-link" href="{% url 'reserva_list' %}">Mis reservas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'boleto_list' %}">Mis boletos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'vuelo_list' %}">Vuelos</a>
                         </li>
                     <!-- {% endif %} -->
                 </ul>

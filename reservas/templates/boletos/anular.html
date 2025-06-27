@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Anular Boleto{% endblock %}
+{% block content %}
+<div class="card border-danger">
+  <div class="card-header bg-danger text-white">Anular Boleto</div>
+  <div class="card-body">
+    <p>¿Estás seguro de que querés anular este boleto?</p>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Confirmar</button>
+      <a href="{% url 'boleto_list' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

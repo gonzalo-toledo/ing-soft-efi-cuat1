@@ -1,49 +1,60 @@
 {% extends "base.html" %}
-
-{% block title %}Vuelos List{% endblock %}
+{% block title %}Lista de Vuelos{% endblock %}
 
 {% block content %}
-    <h1 class="text-center">Listado de vuelos</h1>
-
-    <div class="table-responsive">
-        <table class="table table-success table-hover">
-            <thead style="text-align: center;">
-                <tr class="table-secondary">
-                    <th scope="col">Avion</th>
-                    <th scope="col">Origen</th>
-                    <th scope="col">Destino</th>
-                    <th scope="col">Fecha de salida</th>
-                    <th scope="col">Fecha de llegada</th>
-                    <th scope="col">Duracion</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">Precio base</th>
-                    <th scope="col">Acciones</th>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Vuelos</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .btn { padding: 5px 10px; text-decoration: none; background-color: #007bff; color: white; border-radius: 3px; }
+        .btn:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>Vuelos Disponibles</h1>
+    
+    {% if vuelos %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Origen</th>
+                    <th>Destino</th>
+                    <th>Fecha Salida</th>
+                    <th>Fecha Llegada</th>
+                    <th>Avión</th>
+                    <th>Precio Base</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody style="text-align: center;">
-                {%for vuelo in vuelos%}
-                <tr class="">
-                    <td>{{ vuelo.avion }}</td>
-                    <td>{{ vuelo.origen }}</td>
-                    <td>{{ vuelo.destino }}</td>
-                    <td>{{ vuelo.fecha_salida }}</td>
-                    <td>{{ vuelo.fecha_llegada }}</td>
-                    <td>{{ vuelo.duracion }}</td>
+            <tbody>
+                {% for vuelo in vuelos %}
+                <tr>
+                    <td>{{ vuelo.origen.nombre }} ({{ vuelo.origen.iata }})</td>
+                    <td>{{ vuelo.destino.nombre }} ({{ vuelo.destino.iata }})</td>
+                    <td>{{ vuelo.fecha_salida|date:"d/m/Y H:i" }}</td>
+                    <td>{{ vuelo.fecha_llegada|date:"d/m/Y H:i" }}</td>
+                    <td>{{ vuelo.avion.modelo }}</td>
+                    <td>${{ vuelo.precio_base }}</td>
                     <td>{{ vuelo.estado }}</td>
-                    <td>{{ vuelo.precio_base }}</td>
                     <td>
-                        <a href="">
-                            <i class="bi bi-eye"></i>
-                        </a>
+                        <a href="{% url 'vuelo_detail' vuelo_id=vuelo.id %}" class="btn">Ver Asientos</a>
                     </td>
                 </tr>
-                <!-- {% empty %}
-                <tr class="">
-                    <td colspan="4">No hay vuelos</td>
-                </tr> -->
                 {% endfor %}
             </tbody>
         </table>
-    </div>
-
+    {% else %}
+        <p>No hay vuelos disponibles en este momento.</p>
+    {% endif %}
+    
+    <br>
+    <a href="{% url 'reserva_list' %}">Ver Reservas</a> | 
+    <a href="{% url 'boleto_list' %}">Ver Boletos</a>
+</body>
+</html>
 {% endblock %}

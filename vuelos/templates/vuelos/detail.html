@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Detalle del Vuelo{% endblock %}
+
+{% block content %}
+<html>
+<head>
+    <title>Vuelo {{ vuelo.id }} - Selección de Asientos</title>
+    <style>
+        .flight-info { background-color: #f8f9fa; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+        .seats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; max-width: 600px; margin: 20px 0; }
+        .seat { 
+            width: 40px; height: 40px; border: 2px solid #ddd; display: flex; 
+            align-items: center; justify-content: center; cursor: pointer; 
+            border-radius: 5px; font-weight: bold; text-decoration: none; color: #333;
+        }
+        .seat.available { background-color: #d4edda; border-color: #28a745; color: #155724; }
+        .seat.available:hover { background-color: #c3e6cb; }
+        .seat.occupied { background-color: #f8d7da; border-color: #dc3545; color: #721c24; cursor: not-allowed; }
+        .stats { margin: 20px 0; }
+        .btn { padding: 8px 15px; text-decoration: none; background-color: #007bff; color: white; border-radius: 3px; }
+        .btn:hover { background-color: #0056b3; }
+        .legend { margin: 20px 0; }
+        .legend-item { display: inline-block; margin-right: 20px; }
+        .legend-color { width: 20px; height: 20px; display: inline-block; margin-right: 5px; vertical-align: middle; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>Selección de Asientos</h1>
+    
+    <div class="flight-info">
+        <h2>Información del Vuelo</h2>
+        <p><strong>Vuelo:</strong> {{ vuelo.origen.iata }} → {{ vuelo.destino.iata }}</p>
+        <p><strong>Origen:</strong> {{ vuelo.origen.nombre }}</p>
+        <p><strong>Destino:</strong> {{ vuelo.destino.nombre }}</p>
+        <p><strong>Salida:</strong> {{ vuelo.fecha_salida|date:"d/m/Y H:i" }}</p>
+        <p><strong>Llegada:</strong> {{ vuelo.fecha_llegada|date:"d/m/Y H:i" }}</p>
+        <p><strong>Avión:</strong> {{ vuelo.avion.modelo }}</p>
+        <p><strong>Precio:</strong> ${{ vuelo.precio_base }}</p>
+    </div>
+    
+    <div class="stats">
+        <p><strong>Asientos totales:</strong> {{ total_asientos }}</p>
+        <p><strong>Asientos disponibles:</strong> {{ asientos_libres }}</p>
+        <p><strong>Asientos ocupados:</strong> {{ asientos_ocupados|length }}</p>
+    </div>
+    
+    <div class="legend">
+        <div class="legend-item">
+            <span class="legend-color" style="background-color: #d4edda; border: 2px solid #28a745;"></span>
+            Disponible
+        </div>
+        <div class="legend-item">
+            <span class="legend-color" style="background-color: #f8d7da; border: 2px solid #dc3545;"></span>
+            Ocupado
+        </div>
+    </div>
+    
+    <h3>Seleccione un Asiento</h3>
+    <div class="seats-grid">
+        {% for asiento in asientos_disponibles %}
+            <a href="{% url 'reserva_create' vuelo_id=vuelo.id asiento_id=asiento.id %}" 
+               class="seat available" 
+               title="Asiento {{ asiento.numero }} - {{ asiento.clase }} - Disponible">
+                {{ asiento.numero }}
+            </a>
+        {% endfor %}
+        
+        {% for asiento in asientos_ocupados %}
+            <div class="seat occupied" 
+                 title="Asiento {{ asiento.numero }} - {{ asiento.clase }} - Ocupado">
+                {{ asiento.numero }}
+            </div>
+        {% endfor %}
+    </div>
+    
+    <br>
+    <a href="{% url 'vuelo_list' %}" class="btn">← Volver a Vuelos</a>
+</body>
+</html>
+{% endblock %}

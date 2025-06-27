@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Detalle del Boleto{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">Detalle del Boleto</div>
+  <div class="card-body">
+    <p><strong>Código:</strong> {{ boleto.codigo_barra }}</p>
+    <p><strong>Reserva:</strong> {{ boleto.reserva }}</p>
+    <p><strong>Estado:</strong> {{ boleto.estado }}</p>
+    <p><strong>Fecha de Emisión:</strong> {{ boleto.fecha_emision }}</p>
+    <a class="btn btn-outline-danger" href="{% url 'boleto_anular' boleto.id %}">Anular</a>
+    <a class="btn btn-secondary" href="{% url 'boleto_list' %}">Volver</a>
+  </div>
+</div>
+{% endblock %}

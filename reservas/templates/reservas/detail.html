@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Detalle de Reserva{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    Detalle de la Reserva
+  </div>
+  <div class="card-body">
+    <p><strong>Pasajero:</strong> {{ reserva.pasajero }}</p>
+    <p><strong>Vuelo:</strong> {{ reserva.vuelo }}</p>
+    <p><strong>Asiento:</strong> {{ reserva.asiento }}</p>
+    <p><strong>Estado:</strong> {{ reserva.estado }}</p>
+    <p><strong>Fecha:</strong> {{ reserva.fecha_reserva }}</p>
+    <a class="btn btn-outline-danger" href="{% url 'reserva_cancelar' reserva.id %}">Cancelar</a>
+    <a class="btn btn-secondary" href="{% url 'reserva_list' %}">Volver</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% block title %}Crear Reserva{% endblock %}
+
+{% block content %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Reserva</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .flight-info {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #2196f3;
+        }
+        .flight-info h3 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .info-item {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        .info-value {
+            font-size: 1.1em;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: white;
+        }
+        select:focus {
+            outline: none;
+            border-color: #2196f3;
+        }
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        .btn-primary {
+            background-color: #2196f3;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #1976d2;
+        }
+        .btn-secondary {
+            background-color: #666;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #555;
+        }
+        .seat-visual {
+            display: inline-block;
+            background: #4caf50;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Crear Reserva</h1>
+        
+        <!-- Información del vuelo y asiento seleccionados -->
+        <div class="flight-info">
+            <h3>📋 Detalles de tu selección</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Origen</div>
+                    <div class="info-value">{{ vuelo.origen }} →</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Destino</div>
+                    <div class="info-value"> {{ vuelo.destino }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Fecha y Hora</div>
+                    <div class="info-value">{{ vuelo.fecha_salida|date:"d/m/Y H:i" }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Avión</div>
+                    <div class="info-value">{{ vuelo.avion.modelo }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Asiento Seleccionado</div>
+                    <div class="info-value">
+                        {{ asiento.numero }}
+                        <span class="seat-visual">{{ asiento.clase }}</span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Precio</div>
+                    <div class="info-value">${{ vuelo.precio_base }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulario -->
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="{{ form.pasajero.id_for_label }}">
+                    👤 Seleccionar Pasajero:
+                </label>
+                {{ form.pasajero }}
+                {% if form.pasajero.help_text %}
+                    <small>{{ form.pasajero.help_text }}</small>
+                {% endif %}
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn btn-primary">
+                    ✈️ Confirmar Reserva
+                </button>
+                <a href="{% url 'vuelo_detail' vuelo_id=vuelo.id %}" class="btn btn-secondary">
+                    ← Volver al Vuelo
+                </a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+{% endblock %}

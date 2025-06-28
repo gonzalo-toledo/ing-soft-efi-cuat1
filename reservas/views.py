@@ -26,75 +26,93 @@ class ReservaDetailView(DetailView):
 
 
 class ReservaCreateView(CreateView):
+    """
+    Vista para crear una nueva reserva.
+    Recibe vuelo_id y asiento_id por URL y valida la disponibilidad.
+    """
     model = Reserva
     form_class = ReservaForm
     template_name = 'reservas/create.html'
     success_url = reverse_lazy('reserva_list')
 
     def dispatch(self, request, *args, **kwargs):
-        # Obtener vuelo y asiento de la URL
-        self.vuelo_id = kwargs.get('vuelo_id')
-        self.asiento_id = kwargs.get('asiento_id')
+        """
+        Método que se ejecuta antes de cualquier procesamiento.
+        Aquí validamos que el vuelo y asiento sean válidos y estén disponibles.
+        """
+        # Obtener IDs de la URL
+        vuelo_id = kwargs.get('vuelo_id')
+        asiento_id = kwargs.get('asiento_id')
         
-        # Validar que existen
-        if not self.vuelo_id or not self.asiento_id:
+        # Validar que ambos IDs existen
+        if not vuelo_id or not asiento_id:
             messages.error(request, "Debe seleccionar un vuelo y asiento válidos.")
             return redirect('vuelo_list')
         
-        # Obtener objetos
-        self.vuelo = get_object_or_404(Vuelo, id=self.vuelo_id)
-        self.asiento = get_object_or_404(Asiento, id=self.asiento_id)
+        # Obtener objetos desde la base de datos
+        self.vuelo = get_object_or_404(Vuelo, id=vuelo_id)
+        self.asiento = get_object_or_404(Asiento, id=asiento_id)
         
         # Validar que el asiento pertenece al avión del vuelo
         if self.asiento.avion != self.vuelo.avion:
             messages.error(request, "El asiento no pertenece al avión de este vuelo.")
-            return redirect('vuelo_detail', vuelo_id=self.vuelo_id)
+            return redirect('vuelo_detail', vuelo_id=vuelo_id)
         
-        # Validar que el asiento está disponible
-        if self._asiento_ocupado():
-            messages.error(request, "Este asiento ya está reservado.")
-            return redirect('vuelo_detail', vuelo_id=self.vuelo_id)
-        
-        return super().dispatch(request, *args, **kwargs)
-
-    def _asiento_ocupado(self):
-        """Verifica si el asiento ya está ocupado"""
-        return Reserva.objects.filter(
+        # Validar que el asiento no esté ocupado
+        reserva_existente = Reserva.objects.filter(
             vuelo=self.vuelo, 
             asiento=self.asiento,
             estado__in=['Confirmada', 'Pendiente']
         ).exists()
+        
+        if reserva_existente:
+            messages.error(request, "Este asiento ya está reservado.")
+            return redirect('vuelo_detail', vuelo_id=vuelo_id)
+        
+        # Si todo está bien, continuar con el procesamiento normal
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
+        """
+        Agregar datos adicionales al contexto del template.
+        Enviamos la información del vuelo y asiento seleccionados.
+        """
         context = super().get_context_data(**kwargs)
         context['vuelo'] = self.vuelo
         context['asiento'] = self.asiento
         return context
 
     def get_form_kwargs(self):
+        """
+        Personalizar los argumentos que se pasan al formulario.
+        Aquí pre-asignamos el vuelo y asiento, y pasamos el usuario actual.
+        """
         kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user  # Pasar usuario al formulario
         
-        # Ensure 'instance' is not None before attempting to set its attributes
-        # Create a new Reserva instance if one isn't provided or if it's None
-        if kwargs.get('instance') is None:
-            kwargs['instance'] = Reserva(vuelo=self.vuelo, asiento=self.asiento)
-        else:
-            # If an instance already exists, update its vuelo and asiento
-            kwargs['instance'].vuelo = self.vuelo
-            kwargs['instance'].asiento = self.asiento
+        # Pasar el usuario actual al formulario para filtrar pasajeros
+        kwargs['user'] = self.request.user
+        
+        # Crear nueva instancia de Reserva con vuelo y asiento pre-asignados
+        # Esto evita que el usuario pueda modificar estos valores
+        kwargs['instance'] = Reserva(
+            vuelo=self.vuelo, 
+            asiento=self.asiento
+        )
+        
         return kwargs
 
-    # Remove form_valid's assignment of vuelo and asiento, as it's now handled in get_form_kwargs
     def form_valid(self, form):
-        # form.instance.vuelo and form.instance.asiento are already set by get_form_kwargs
+        """
+        Método que se ejecuta cuando el formulario es válido.
+        Aquí confirmamos la reserva y mostramos mensaje de éxito.
+        """
+        # El estado por defecto es 'Pendiente' según el modelo
         messages.success(
             self.request, 
-            f"Reserva creada para el vuelo {self.vuelo} en el asiento {self.asiento.numero}."
+            f"Reserva creada exitosamente para el vuelo {self.vuelo.origen} → "
+            f"{self.vuelo.destino} en el asiento {self.asiento.numero}."
         )
         return super().form_valid(form)
-
-
 class ReservaCancelView(DeleteView):
     model = Reserva
     template_name = 'reservas/cancel.html'

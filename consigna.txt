@@ -1,0 +1,177 @@
+﻿EVALUACIÓN FINAL INTEGRADORA - SISTEMA DE GESTIÓN DE AEROLÍNEA
+
+
+Objetivo:
+Desarrollar un sistema web completo para gestionar una aerolínea, implementando los conceptos aprendidos durante el primer semestre.
+
+
+Trabajo en Grupos:
+- Los grupos no podrán superar los 3 integrantes
+- Cada miembro del grupo debe haber realizado al menos 1 commit en el repositorio de GitHub
+
+
+Requisitos Técnicos:
+1. Desarrollar una aplicación web utilizando Django
+2. Implementar base de datos relacional (SQLite o PostgreSQL)
+3. Crear una interfaz de usuario amigable
+4. Implementar autenticación de usuarios
+5. Manejar correctamente las relaciones entre modelos
+
+
+Funcionalidades Obligatorias:
+1. Gestión de Vuelos:
+   - Crear, editar y eliminar vuelos (en el Admin), ver vuelos (Admin y Web para el usuario)
+   - Registrar información de vuelo (origen, destino, fecha, hora, duración)
+   - Asignar avión a cada vuelo
+
+
+2. Gestión de Pasajeros:
+   - Registro de pasajeros
+   - Información personal (nombre, documento, contacto)
+   - Historial de vuelos
+
+
+3. Sistema de Reservas:
+   - Visualización de disponibilidad de asientos
+   - Reserva de asientos específicos
+   - Gestión de estados (disponible, reservado, ocupado)
+   - Generación de boletos electrónicos
+
+
+4. Gestión de Aviones:
+   - Registro de flota
+   - Definición de layout de asientos
+   - Mantenimiento de información técnica
+
+
+5. Reportes:
+   - Listado de pasajeros por vuelo
+
+
+Consideraciones:
+- Implementar validaciones en el backend y frontend
+- Manejar correctamente los errores
+- Documentar el código
+- Implementar pruebas unitarias (Opcional)
+- Seguir buenas prácticas de programación
+- Respetar los principios SOLID
+
+
+Entrega:
+- Código fuente completo
+- Documentación técnica
+- Base de datos
+- Pruebas unitarias (Opcional)
+
+
+
+
+Sugerencia de modelado
+
+Entidades Principales:
+
+
+1. AVIÓN
+   - id (PK)
+   - modelo
+   - capacidad
+   - filas
+   - columnas
+
+
+2. VUELO
+   - id (PK)
+   - avion_id (FK)
+   - origen
+   - destino
+   - fecha_salida
+   - fecha_llegada
+   - duracion
+   - estado
+   - precio_base
+
+
+3. PASAJERO
+   - id (PK)
+   - nombre
+   - documento
+   - email
+   - telefono
+   - fecha_nacimiento
+   - tipo_documento
+
+
+4. RESERVA
+   - id (PK)
+   - vuelo_id (FK)
+   - pasajero_id (FK)
+   - asiento_id (FK)
+   - estado
+   - fecha_reserva
+   - precio
+   - codigo_reserva
+
+
+5. ASIENTO
+   - id (PK)
+   - avion_id (FK)
+   - numero
+   - fila
+   - columna
+   - tipo
+   - estado
+
+
+6. USUARIO
+   - id (PK)
+   - username
+   - password
+   - email
+   - rol
+
+
+7. BOLETO
+   - id (PK)
+   - reserva_id (FK)
+   - codigo_barra
+   - fecha_emision
+   - estado
+
+
+Relaciones:
+1. AVIÓN - VUELO (1:N)
+   - Un avión puede tener múltiples vuelos
+   - Un vuelo pertenece a un solo avión
+
+
+2. VUELO - RESERVA (1:N)
+   - Un vuelo puede tener múltiples reservas
+   - Una reserva pertenece a un solo vuelo
+
+
+3. PASAJERO - RESERVA (1:N)
+   - Un pasajero puede tener múltiples reservas
+   - Una reserva pertenece a un solo pasajero
+
+
+4. ASIENTO - RESERVA (1:1)
+   - Un asiento puede estar reservado por una reserva
+   - Una reserva se asocia con un solo asiento
+
+
+5. USUARIO - VUELO (1:N)
+   - Un usuario puede gestionar múltiples vuelos
+   - Un vuelo puede ser gestionado por múltiples usuarios
+
+
+6. RESERVA - BOLETO (1:1)
+   - Una reserva genera un boleto
+   - Un boleto está asociado a una reserva
+
+
+Restricciones:
+- Un asiento no puede estar reservado más de una vez por vuelo
+- Un pasajero no puede tener más de una reserva por vuelo
+- Los estados de los asientos deben ser consistentes con las reservas
+- Los datos de los pasajeros deben ser válidos y únicos por documento
+- Los vuelos deben tener fechas y horas válidas

@@ -56,13 +56,21 @@
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">Iniciá Sesion</a>
+                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar sesión</a>
                         </li>
-                        <li class="nav-item">
+                        <li>
+                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Registrate</a>
+                        </li>
+                        <!-- <li class="nav-item">
                             <a class="nav-link" href="{% url 'register' %}">Registrate</a>
-                        </li>
+                        </li> -->
                     {% endif %}
                 </ul>
+            </div>
+
+            <div>
+                {% include 'account/login_modal.html' %}
+                {% include 'account/register_modal.html' %}
             </div>
         </nav>
 

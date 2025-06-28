@@ -39,40 +39,67 @@ class RegisterView(View):
 
             return render(request, 'account/register.html', {'form': form})
             
+# class LoginView(View):
+#     def get(self, request):
+#         form = LoginForm()
+#         return render(
+#             request,
+#             'account/login.html',
+#             {'form': form}
+#         )
+    
+#     def post(self, request):
+#         form = LoginForm(request.POST)
+#         if form.is_valid():
+#             username = form.cleaned_data.get('username')
+#             password = form.cleaned_data.get('password')
+            
+#             user = authenticate ( 
+#                 request,
+#                 username = username,
+#                 password = password
+#             )
+#             if user is not None:
+#                 login(request, user)
+#                 return redirect('index')
+#             else:
+#                 messages.error(request, 'Usuario o contrase')
+#                 return redirect('login')
+#         else:
+#             # Este bloque toma los errores del formulario y los agrega al sistema de mensajes
+#             for field, errors in form.errors.items():
+#                 for error in errors:
+#                     messages.error(request, f"{form.fields[field].label}: {error}" if field in form.fields else error)
+
+#             return render(request, 'account/login.html', {'form': form})
+        
+
 class LoginView(View):
     def get(self, request):
-        form = LoginForm()
-        return render(
-            request,
-            'account/login.html',
-            {'form': form}
-        )
-    
+        # No mostramos la página independiente, redirigimos a la principal
+        return redirect('index')
+        #si no quiero que redirija a index y que abra el modal de login, descomentar la siguiente línea
+        # return render(request, 'account/login.html', {'form': LoginForm()})
+
     def post(self, request):
         form = LoginForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            
-            user = authenticate ( 
-                request,
-                username = username,
-                password = password
-            )
+            username = form.cleaned_data["username"]
+            password = form.cleaned_data["password"]
+
+            user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
                 return redirect('index')
             else:
-                messages.error(request, 'Credenciales incorrectas')
-                return redirect('login')
+                messages.error(request, "Usuario o contraseña incorrectos")
         else:
-            # Este bloque toma los errores del formulario y los agrega al sistema de mensajes
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f"{form.fields[field].label}: {error}" if field in form.fields else error)
+            messages.error(request, "Formulario inválido")
 
-            return render(request, 'account/login.html', {'form': form})
-        
+        # Redirigimos a index para mostrar el modal con errores
+        return redirect('index')
+
+
 class LogoutView(View):
     def get(self, request):
         logout(request)

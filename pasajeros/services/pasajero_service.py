@@ -9,7 +9,7 @@ class PasajeroService:
         :param data: Diccionario con los datos del pasajero.
         :return: Instancia del pasajero creado.
         """
-        # Aquí podrías agregar validaciones adicionales si es necesario
+        # Validaciones
         if 'pasaporte' not in data:
             raise ValueError("El pasaporte es obligatorio para registrar un pasajero.")
         

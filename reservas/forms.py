@@ -33,9 +33,3 @@ class ReservaForm(forms.ModelForm):
         else:
             # Si no hay usuario, no mostrar pasajeros
             self.fields['pasajero'].queryset = Pasajero.objects.none()
-
-
-class BoletoForm(forms.ModelForm):
-    class Meta:
-        model = Boleto
-        fields = ['reserva']

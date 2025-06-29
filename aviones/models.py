@@ -40,6 +40,6 @@ class Asiento(models.Model):
     fila = models.IntegerField()
     columna = models.CharField(max_length=1)
     tipo = models.CharField(max_length=20, choices=[('E', 'Económico'), ('P', 'Primera Clase')])
-
+    
     def __str__(self):
         return f"{self.numero} - {self.tipo}"

@@ -3,6 +3,8 @@ from vuelos.models import Vuelo
 from aviones.models import Asiento
 from pasajeros.models import Pasajero
 from django.core.exceptions import ValidationError
+import uuid
+from django.utils.timezone import now
 
 
 class Reserva(models.Model):
@@ -26,6 +28,15 @@ class Reserva(models.Model):
 
     def __str__(self):
         return f"Reserva {self.pk} - {self.pasajero.nombre} para {self.vuelo}"
+    
+    def generar_boleto(self):
+        """Crea un boleto asociado a esta reserva."""
+        return Boleto.objects.create(
+            reserva=self,
+            codigo_barra=str(uuid.uuid4().hex[:20]),
+            fecha_emision=now(),
+            estado='Emitido'
+        )
 
     class Meta:
         constraints = [
@@ -45,6 +56,7 @@ class Boleto(models.Model):
         ], 
         default='Emitido'
     )
+
     def __str__(self):
         return f"Boleto {self.codigo_barra} - {self.reserva.pasajero.nombre}"
     

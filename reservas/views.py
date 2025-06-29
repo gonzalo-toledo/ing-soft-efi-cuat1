@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView
 from django.shortcuts import get_object_or_404, redirect
 from reservas.models import Reserva, Boleto
-from reservas.forms import ReservaForm, BoletoForm
+from reservas.forms import ReservaForm
 from vuelos.models import Vuelo
 from aviones.models import Asiento
 
@@ -102,17 +102,20 @@ class ReservaCreateView(CreateView):
         return kwargs
 
     def form_valid(self, form):
-        """
-        Método que se ejecuta cuando el formulario es válido.
-        Aquí confirmamos la reserva y mostramos mensaje de éxito.
-        """
-        # El estado por defecto es 'Pendiente' según el modelo
+        self.object = form.save(commit=False)
+        self.object.estado = 'Confirmada'
+        self.object.save()
+
+        # Crear boleto automáticamente
+        self.object.generar_boleto()
+
         messages.success(
             self.request, 
-            f"Reserva creada exitosamente para el vuelo {self.vuelo.origen} → "
+            f"Reserva y boleto creados exitosamente para el vuelo {self.vuelo.origen} → "
             f"{self.vuelo.destino} en el asiento {self.asiento.numero}."
         )
-        return super().form_valid(form)
+        return redirect(self.success_url)
+    
 class ReservaCancelView(DeleteView):
     model = Reserva
     template_name = 'reservas/cancel.html'
@@ -121,11 +124,19 @@ class ReservaCancelView(DeleteView):
 
     def delete(self, request, *args, **kwargs):
         reserva = self.get_object()
-        reserva.estado = 'Cancelada' 
+        reserva.estado = 'Cancelada'
         reserva.save()
-        messages.success(request, "Reserva cancelada correctamente.")
-        return redirect(self.success_url)
 
+        # Anular boleto si existe
+        try:
+            boleto = Boleto.objects.get(reserva=reserva)
+            boleto.estado = 'Anulado'
+            boleto.save()
+        except Boleto.DoesNotExist:
+            pass
+
+        messages.success(request, "Reserva y boleto cancelados correctamente.")
+        return redirect(self.success_url)
 
 # ==== BOLETOS ====
 
@@ -135,56 +146,15 @@ class BoletoListView(ListView):
     context_object_name = 'boletos'
     
     def get_queryset(self):
-        return Boleto.objects.select_related('reserva__pasajero', 'reserva__vuelo').order_by('-fecha_emision')
-
-
+        return Boleto.objects.select_related('reserva__pasajero', 'reserva__vuelo', 'reserva__asiento').order_by('-fecha_emision')
+    
 class BoletoDetailView(DetailView):
     model = Boleto
     template_name = 'boletos/detail.html'
     context_object_name = 'boleto'
     pk_url_kwarg = 'boleto_id'
 
-
-class BoletoCreateView(CreateView):
-    model = Boleto
-    form_class = BoletoForm
-    template_name = 'boletos/create.html'
-    success_url = reverse_lazy('boleto_list')
-
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        # Solo reservas confirmadas sin boleto
-        reservas_disponibles = Reserva.objects.filter(
-            estado='Confirmada'
-        ).exclude(
-            id__in=Boleto.objects.values_list('reserva_id', flat=True)
-        )
-        form.fields['reserva'].queryset = reservas_disponibles
-        return form
-
-    def form_valid(self, form):
-        # Verificar que no existe ya un boleto
-        if Boleto.objects.filter(reserva=form.instance.reserva).exists():
-            messages.error(self.request, "Esta reserva ya tiene un boleto emitido.")
-            return self.form_invalid(form)
-        
-        # Generar código único
-        import uuid
-        form.instance.codigo_barra = str(uuid.uuid4()).replace('-', '')[:12].upper()
-        
-        messages.success(self.request, "Boleto emitido correctamente.")
-        return super().form_valid(form)
-
-
-class BoletoAnularView(DeleteView):
-    model = Boleto
-    template_name = 'boletos/anular.html'
-    pk_url_kwarg = 'boleto_id'
-    success_url = reverse_lazy('boleto_list')
-
-    def delete(self, request, *args, **kwargs):
-        boleto = self.get_object()
-        boleto.estado = 'Anulado'
-        boleto.save()
-        messages.success(request, "Boleto anulado correctamente.")
-        return redirect(self.success_url)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['reserva'] = self.object.reserva
+        return context

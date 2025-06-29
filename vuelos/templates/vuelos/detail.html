@@ -60,15 +60,15 @@
         {% for asiento in asientos_disponibles %}
             <a href="{% url 'reserva_create' vuelo_id=vuelo.id asiento_id=asiento.id %}" 
                class="seat available" 
-               title="Asiento {{ asiento.numero }} - {{ asiento.clase }} - Disponible">
-                {{ asiento.numero }}
+               title="Asiento {{ asiento.numero }} - {{ asiento.tipo }} - Disponible">
+                {{ asiento.numero }} - {{ asiento.tipo }}
             </a>
         {% endfor %}
         
         {% for asiento in asientos_ocupados %}
             <div class="seat occupied" 
-                 title="Asiento {{ asiento.numero }} - {{ asiento.clase }} - Ocupado">
-                {{ asiento.numero }}
+                 title="Asiento {{ asiento.numero }} - {{ asiento.tipo }} - Ocupado">
+                {{ asiento.numero }} - {{ asiento.tipo }}
             </div>
         {% endfor %}
     </div>

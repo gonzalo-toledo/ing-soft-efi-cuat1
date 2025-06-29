@@ -1,5 +1,5 @@
 from django import forms
-from reservas.models import Reserva, Boleto
+from reservas.models import Reserva
 from pasajeros.models import Pasajero
 
 class ReservaForm(forms.ModelForm):

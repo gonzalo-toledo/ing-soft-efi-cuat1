@@ -6,6 +6,7 @@ from reservas.models import Reserva, Boleto
 from reservas.forms import ReservaForm
 from vuelos.models import Vuelo
 from aviones.models import Asiento
+from pasajeros.models import Pasajero
 
 # ==== RESERVAS ====
 
@@ -40,6 +41,9 @@ class ReservaCreateView(CreateView):
         Método que se ejecuta antes de cualquier procesamiento.
         Aquí validamos que el vuelo y asiento sean válidos y estén disponibles.
         """
+        # Asegurarnos de que el usuario está autenticado
+        kwargs['user'] = self.request.user
+        
         # Obtener IDs de la URL
         vuelo_id = kwargs.get('vuelo_id')
         asiento_id = kwargs.get('asiento_id')
@@ -102,6 +106,22 @@ class ReservaCreateView(CreateView):
         return kwargs
 
     def form_valid(self, form):
+        # Obtener los datos del formulario
+        pasajero = form.cleaned_data['pasajero']
+
+        # Verificar si el pasajero ya tiene una reserva para este vuelo
+        reserva_existente = Reserva.objects.filter(
+            vuelo=self.vuelo,
+            pasajero=pasajero,
+            estado__in=['Confirmada', 'Pendiente']
+        ).exists()
+
+        if reserva_existente:
+            messages.error(
+                self.request, 
+                f"El pasajero {pasajero} ya tiene una reserva para este vuelo."
+            )
+            return redirect('vuelo_detail', vuelo_id=self.vuelo.id)        
         self.object = form.save(commit=False)
         self.object.estado = 'Confirmada'
         self.object.save()

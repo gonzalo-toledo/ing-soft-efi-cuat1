@@ -1,15 +1,309 @@
 {% extends 'base.html' %}
-{% block title %} Home {% endblock %}
+{% load static %}
+
+{% block title %}SkyWay Airlines - Home{% endblock %}
 
 {% block content %}
-    <div class="p-5 mb-4 bg-success rounded-3">
-        <div class="container-fluid py-5">
-            <h1 class="display-5 fw-bold">INDEX</h1>
-            <p class="col-md-8 fs-4">
-                Bienvenida a la web
-            </p>
-            <button class="btn btn-primary btn-lg" type="button">Empezar</button>
+    <!-- Hero Section with Overlay -->
+    <div class="hero-banner position-relative mb-5"
+        style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({% static 'img/bg-hero1.jpeg' %}); 
+               background-size: cover; background-position: center; height: 500px;">
+        <div class="container h-100 d-flex flex-column justify-content-center text-white">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h1 class="display-4 fw-bold mb-2">SkyWay Airlines</h1>
+                    <h2 class="h3 mb-4">Sistema de Gestión de Aerolínea</h2>
+                    <p class="fs-5 mb-4">
+                        Gestiona tus vuelos con una plataforma moderna e intuitiva. Descubre nuevos destinos con nuestro servicio premium.
+                    </p>
+                    <div>
+                        <button class="btn btn-primary btn-lg px-4" type="button" data-bs-toggle="modal" data-bs-target="#searchModal">
+                            <i class="bi bi-search me-2"></i>Buscar Vuelos
+                        </button>
+                        {% if not user.is_authenticated %}
+                        <button class="btn btn-outline-light btn-lg ms-3 px-4" type="button" data-bs-toggle="modal"
+                            data-bs-target="#registerModal">
+                            <i class="bi bi-person-plus me-2"></i>Registrarse
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    
+
+    <!-- Flight Search Card (Floating above content) -->
+    <div class="container">
+        <div class="card search-card mb-5 shadow" style="margin-top: -100px; border-radius: 15px; z-index: 100; position: relative;">
+            <div class="card-body p-4">
+                <h4 class="card-title mb-4">Buscar Vuelos</h4>
+                <form action="" method="get">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-5">
+                            <label for="origen" class="form-label">
+                                <i class="bi bi-geo-alt me-1 text-primary"></i>Origen
+                            </label>
+                            <select class="form-select" id="origen" name="origen" required>
+                                <option value="" selected disabled>Seleccione origen</option>
+                                <option value="BUE">Buenos Aires</option>
+                                <option value="MAD">Madrid</option>
+                                <option value="MIA">Miami</option>
+                                <option value="NYC">Nueva York</option>
+                                <option value="LON">Londres</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-5">
+                            <label for="destino" class="form-label">
+                                <i class="bi bi-geo-alt-fill me-1 text-primary"></i>Destino
+                            </label>
+                            <select class="form-select" id="destino" name="destino" required>
+                                <option value="" selected disabled>Seleccione destino</option>
+                                <option value="BUE">Buenos Aires</option>
+                                <option value="MAD">Madrid</option>
+                                <option value="MIA">Miami</option>
+                                <option value="NYC">Nueva York</option>
+                                <option value="LON">Londres</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-2">
+                            <label for="fecha" class="form-label">
+                                <i class="bi bi-calendar-event me-1 text-primary"></i>Fecha
+                            </label>
+                            <input type="date" class="form-control" id="fecha" name="fecha" required>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="bi bi-search me-2"></i>Buscar Vuelos
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <h3 class="fw-bold mb-3">¿Por qué elegir SkyWay Airlines?</h3>
+            <p class="lead text-muted">Optimizamos la gestión aérea con tecnología moderna y una visión centrada en la eficiencia operativa.</p>
+        </div>
+        
+        <div class="row text-center g-4">
+            <div class="col-md-3">
+                <div class="card h-100 feature-card shadow-sm border-0">
+                    <div class="card-body p-4">
+                        <div class="feature-icon mx-auto mb-4">
+                            <i class="bi bi-emoji-smile"></i>
+                        </div>
+                        <h5 class="card-title">Atención de calidad</h5>
+                        <p class="card-text text-muted">Nuestra flota está equipada con la última tecnología para garantizar seguridad y confort.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 feature-card shadow-sm border-0">
+                    <div class="card-body p-4">
+                        <div class="feature-icon mx-auto mb-4">
+                            <i class="bi bi-airplane-engines"></i>
+                        </div>
+                        <h5 class="card-title">Aviones modernos</h5>
+                        <p class="card-text text-muted">Viajás en aeronaves nuevas, confortables y con el mejor servicio a bordo.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 feature-card shadow-sm border-0">
+                    <div class="card-body p-4">
+                        <div class="feature-icon mx-auto mb-4">
+                            <i class="bi bi-globe-americas"></i>
+                        </div>
+                        <h5 class="card-title">Conexión internacional</h5>
+                        <p class="card-text text-muted">Llegá a más de 150 destinos en todo el mundo con opciones de horarios accesibles.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 feature-card shadow-sm border-0">
+                    <div class="card-body p-4">
+                        <div class="feature-icon mx-auto mb-4">
+                            <i class="bi bi-calendar-check"></i>
+                        </div>
+                        <h5 class="card-title">Vuelos diarios</h5>
+                        <p class="card-text text-muted">Más de 500 vuelos diarios a todo el mundo, para que puedas disfrutar de tus destinos favoritos.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="bg-light py-5 mt-5">
+        <div class="container">
+            <div class="row text-center g-4">
+                <div class="col-md-3">
+                    <h2 class="text-primary fw-bold mb-2">150+</h2>
+                    <p class="text-muted">Destinos</p>
+                </div>
+                <div class="col-md-3">
+                    <h2 class="text-primary fw-bold mb-2">500+</h2>
+                    <p class="text-muted">Vuelos Diarios</p>
+                </div>
+                <div class="col-md-3">
+                    <h2 class="text-primary fw-bold mb-2">50+</h2>
+                    <p class="text-muted">Aeronaves</p>
+                </div>
+                <div class="col-md-3">
+                    <h2 class="text-primary fw-bold mb-2">1M+</h2>
+                    <p class="text-muted">Pasajeros</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Testimonials Section -->
+    <div class="container py-5">
+        <h3 class="fw-bold text-center mb-4">Lo que dicen nuestros pasajeros</h3>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex mb-3">
+                            <i class="bi bi-star-fill text-warning me-1"></i>
+                            <i class="bi bi-star-fill text-warning me-1"></i>
+                            <i class="bi bi-star-fill text-warning me-1"></i>
+                            <i class="bi bi-star-fill text-warning me-1"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                        </div>
+                        <p class="card-text mb-3">"Excelente servicio, puntualidad y atención. Definitivamente volveré a volar con SkyWay Airlines."</p>
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                <span>MR</span>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">María Rodríguez</h6>
+                                <small class="text-muted">Buenos Aires</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex mb-3">
+                            <i class="bi bi-star-fill text-warning me-1"></i>
+                            <i class="bi bi-star-fill text-warning me-1"></i>
+                            <i class="bi bi-star-fill text-warning me-1"></i>
+                            <i class="bi bi-star-fill text-warning me-1"></i>
+                            <i class="bi bi-star text-warning"></i>
+                        </div>
+                        <p class="card-text mb-3">"Los aviones son modernos y cómodos. El personal de a bordo siempre atento y amable."</p>
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                <span>JG</span>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Juan González</h6>
+                                <small class="text-muted">Madrid</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex mb-3">
+                            <i class="bi bi-star-fill text-warning me-1"></i>
+                            <i class="bi bi-star-fill text-warning me-1"></i>
+                            <i class="bi bi-star-fill text-warning me-1"></i>
+                            <i class="bi bi-star-fill text-warning me-1"></i>
+                            <i class="bi bi-star-half text-warning"></i>
+                        </div>
+                        <p class="card-text mb-3">"La plataforma de reservas es muy intuitiva y fácil de usar. Recomiendo SkyWay Airlines."</p>
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                <span>AL</span>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Ana López</h6>
+                                <small class="text-muted">Nueva York</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CSS for Feature Cards -->
+    <style>
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background-color: rgba(13, 110, 253, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            color: #0d6efd;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-card:hover .feature-icon {
+            background-color: #0d6efd;
+            color: white;
+        }
+        
+        .search-card {
+            background-color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .search-card {
+                margin-top: 0 !important;
+            }
+        }
+    </style>
+
+    <!-- JavaScript for Date and Origin/Destination -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default date to tomorrow
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('fecha').value = tomorrow.toISOString().split('T')[0];
+            
+            // Prevent selecting the same city for origin and destination
+            const origenSelect = document.getElementById('origen');
+            const destinoSelect = document.getElementById('destino');
+            
+            origenSelect.addEventListener('change', function() {
+                for (let i = 0; i < destinoSelect.options.length; i++) {
+                    destinoSelect.options[i].disabled = (destinoSelect.options[i].value === this.value);
+                }
+            });
+            
+            destinoSelect.addEventListener('change', function() {
+                for (let i = 0; i < origenSelect.options.length; i++) {
+                    origenSelect.options[i].disabled = (origenSelect.options[i].value === this.value);
+                }
+            });
+        });
+    </script>
 {% endblock %}

@@ -73,6 +73,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'home.context_processors.login_form',  # Custom context processor
                 'home.context_processors.register_form',  # Custom context processor
+                'vuelos.context_processors.aeropuertos_disponibles',  # Custom context processor0
             ],
         },
     },

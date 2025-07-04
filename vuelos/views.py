@@ -3,6 +3,9 @@ from vuelos.models import Vuelo
 from aviones.models import Asiento
 from reservas.models import Reserva
 from django.db.models.functions import TruncDate
+from django.contrib import messages
+from django.shortcuts import redirect
+from datetime import date
 
 
 class VueloList(ListView):
@@ -56,22 +59,38 @@ class BuscarVueloView(ListView):
     model = Vuelo
     template_name = 'vuelos/search_results.html'
     context_object_name = 'vuelos'
-    
+
+    def get(self, request, *args, **kwargs):
+        origen = request.GET.get('origen')
+        destino = request.GET.get('destino')
+        fecha = request.GET.get('fecha')
+
+        # Validación: origen y destino no pueden ser iguales
+        if origen and destino and origen == destino:
+            messages.error(request, "El origen y el destino no pueden ser iguales.")
+            return redirect('index')
+
+        # Validación: fecha no puede ser anterior a hoy
+        if fecha and fecha < date.today().isoformat():
+            messages.error(request, "La fecha no puede ser anterior a hoy.")
+            return redirect('index')
+
+        return super().get(request, *args, **kwargs)
+
     def get_queryset(self):
         origen = self.request.GET.get('origen')
         destino = self.request.GET.get('destino')
         fecha = self.request.GET.get('fecha')
-        
+
         queryset = Vuelo.objects.filter(estado='Programado')
-        
+
         if origen:
             queryset = queryset.filter(origen__iata=origen)
         if destino:
             queryset = queryset.filter(destino__iata=destino)
         if fecha:
-            # Truncar a solo la parte de fecha para comparar
             queryset = queryset.annotate(
                 fecha_solo=TruncDate('fecha_salida')
             ).filter(fecha_solo=fecha)
-            
+
         return queryset.select_related('avion', 'origen', 'destino')

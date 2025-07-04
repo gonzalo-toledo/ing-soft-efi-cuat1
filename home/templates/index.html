@@ -37,17 +37,19 @@
         <div class="card search-card mb-5 shadow" style="margin-top: -100px; border-radius: 15px; z-index: 100; position: relative;">
             <div class="card-body p-4">
                 <h4 class="card-title mb-4">Buscar Vuelos</h4>
-                <form action="{% url 'buscar_vuelo' %}" method="get">
+                <form action="{% url 'buscar_vuelo' %}" method="get" id="form-busqueda">
                     {% csrf_token %}
                     <div class="row g-3">
                         <div class="col-md-5">
                             <label for="origen" class="form-label">
                                 <i class="bi bi-geo-alt me-1 text-primary"></i>Origen
                             </label>
-                            <select id="origen" name="origen" class="form-control">
-                                <option value="">Seleccionar origen</option>
+                            <select id="origen" name="origen" required>
+                                <option value="">Origen</option>
                                 {% for aeropuerto in aeropuertos %}
-                                    <option value="{{ aeropuerto.iata }}">{{ aeropuerto.ciudad }}, {{ aeropuerto.pais }} ({{ aeropuerto.iata }})</option>
+                                    <option value="{{ aeropuerto.iata }}">
+                                        {{ aeropuerto.ciudad }}, {{ aeropuerto.pais }} ({{ aeropuerto.iata }})
+                                    </option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -55,12 +57,14 @@
                             <label for="destino" class="form-label">
                                 <i class="bi bi-geo-alt-fill me-1 text-primary"></i>Destino
                             </label>
-                            <input list="lista_destinos" class="form-control" name="destino" id="destino" placeholder="Ej: Madrid" required>
-                            <datalist id="lista_destinos">
+                            <select id="destino" name="destino" required>
+                                <option value="">Seleccionar destino</option>
                                 {% for aeropuerto in aeropuertos %}
-                                    <option value="{{aeropuerto.iata}}">{{ aeropuerto.ciudad }}, {{ aeropuerto.pais }} ({{aeropuerto.iata}})</option>
+                                    <option value="{{ aeropuerto.iata }}">
+                                        {{ aeropuerto.ciudad }}, {{ aeropuerto.pais }} ({{ aeropuerto.iata }})
+                                    </option>
                                 {% endfor %}
-                            </datalist>
+                            </select>
                         </div>
                         <div class="col-md-2">
                             <label for="fecha" class="form-label">
@@ -121,8 +125,8 @@
                         <div class="feature-icon mx-auto mb-4 fs-1">
                             <i class="bi bi-airplane-engines"></i>
                         </div>
-                        <h5 class="card-title">Aviones modernos</h5>
-                        <p class="card-text ">Viajás en aeronaves nuevas, confortables y con el mejor servicio a bordo.</p>
+                        <h5 class="card-title fw-bold">Aviones modernos</h5>
+                        <p class="card-text fw-semibold">Viajás en aeronaves nuevas, confortables y con el mejor servicio a bordo.</p>
                     </div>
                 </div>
             </div>
@@ -140,8 +144,8 @@
                         <div class="feature-icon mx-auto mb-4 fs-1">
                             <i class="bi bi-globe-americas"></i>
                         </div>
-                        <h5 class="card-title">Conexión internacional</h5>
-                        <p class="card-text">Llegá a más de 150 destinos en todo el mundo con opciones de horarios accesibles.</p>
+                        <h5 class="card-title fw-bold">Conexión internacional</h5>
+                        <p class="card-text fw-semibold">Llegá a más de 150 destinos en todo el mundo con opciones de horarios accesibles.</p>
                     </div>
                 </div>
             </div>
@@ -159,8 +163,8 @@
                         <div class="feature-icon mx-auto mb-4 fs-1">
                             <i class="bi bi-calendar-check"></i>
                         </div>
-                        <h5 class="card-title">Vuelos diarios</h5>
-                        <p class="card-text">Más de 500 vuelos diarios a todo el mundo, para que puedas disfrutar de tus destinos favoritos.</p>
+                        <h5 class="card-title fw-bold">Vuelos diarios</h5>
+                        <p class="card-text fw-semibold">Más de 500 vuelos diarios a todo el mundo, para que puedas disfrutar de tus destinos favoritos.</p>
                     </div>
                 </div>
             </div>
@@ -321,34 +325,67 @@
         }
     </style>
 
-    <!-- JavaScript for Date and Origin/Destination -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Set default date to tomorrow
+            const fechaInput = document.getElementById('fecha');
             const tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
-            document.getElementById('fecha').value = tomorrow.toISOString().split('T')[0];
-            
-            // Prevent selecting the same city for origin and destination
-            const origenSelect = document.getElementById('origen');
-            const destinoSelect = document.getElementById('destino');
-            
-            origenSelect.addEventListener('change', function() {
-                for (let i = 0; i < destinoSelect.options.length; i++) {
-                    destinoSelect.options[i].disabled = (destinoSelect.options[i].value === this.value);
+            fechaInput.value = tomorrow.toISOString().split('T')[0];
+
+            // Tom Select para origen
+            new TomSelect('#origen', {
+                create: false,
+                highlight: true,
+                maxOptions: 10,
+                loadingClass: 'is-loading',
+                score: function (search) {
+                    return function (item) {
+                        return item.text.toLowerCase().includes(search.toLowerCase()) ? 1 : 0;
+                    };
                 }
             });
-            
-            destinoSelect.addEventListener('change', function() {
-                for (let i = 0; i < origenSelect.options.length; i++) {
-                    origenSelect.options[i].disabled = (origenSelect.options[i].value === this.value);
+
+            // Tom Select para destino
+            new TomSelect('#destino', {
+                create: false,
+                highlight: true,
+                maxOptions: 10,
+                loadingClass: 'is-loading',
+                score: function (search) {
+                    return function (item) {
+                        return item.text.toLowerCase().includes(search.toLowerCase()) ? 1 : 0;
+                    };
+                }
+            });
+
+            // Validación visual rápida (opcional, para mejorar UX)
+            const form = document.getElementById('form-busqueda');
+            form.addEventListener('submit', function (e) {
+                const origen = document.getElementById('origen').value;
+                const destino = document.getElementById('destino').value;
+                const fecha = fechaInput.value;
+                const hoy = new Date().toISOString().split('T')[0];
+
+                if (origen === destino && origen !== '') {
+                    alert("El origen y destino no pueden ser iguales.");
+                    // No cancelamos el envío, dejamos que el backend maneje también.
+                    //para cancelar el envio:
+                    //e.preventDefault();
+                    //return
+                }
+
+                if (fecha < hoy) {
+                    alert("La fecha no puede ser anterior a hoy.");
+                    // No cancelamos el envío, dejamos que el backend maneje también
+                    //para cancelar el envio:
+                    //e.preventDefault();
+                    //return
+
+
                 }
             });
         });
-
-        // Initialize Tom Select for better select inputs
-        new TomSelect('#origen');
-        new TomSelect('#destino');
-
     </script>
+
 {% endblock %}

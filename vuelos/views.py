@@ -2,6 +2,7 @@ from django.views.generic import ListView, DetailView
 from vuelos.models import Vuelo
 from aviones.models import Asiento
 from reservas.models import Reserva
+from django.db.models.functions import TruncDate
 
 
 class VueloList(ListView):
@@ -49,3 +50,28 @@ class VueloDetailView(DetailView):
         context['asientos_libres'] = len(asientos_disponibles)
         
         return context
+    
+    
+class BuscarVueloView(ListView):
+    model = Vuelo
+    template_name = 'vuelos/search_results.html'
+    context_object_name = 'vuelos'
+    
+    def get_queryset(self):
+        origen = self.request.GET.get('origen')
+        destino = self.request.GET.get('destino')
+        fecha = self.request.GET.get('fecha')
+        
+        queryset = Vuelo.objects.filter(estado='Programado')
+        
+        if origen:
+            queryset = queryset.filter(origen__iata=origen)
+        if destino:
+            queryset = queryset.filter(destino__iata=destino)
+        if fecha:
+            # Truncar a solo la parte de fecha para comparar
+            queryset = queryset.annotate(
+                fecha_solo=TruncDate('fecha_salida')
+            ).filter(fecha_solo=fecha)
+            
+        return queryset.select_related('avion', 'origen', 'destino')

@@ -37,37 +37,31 @@
         <div class="card search-card mb-5 shadow" style="margin-top: -100px; border-radius: 15px; z-index: 100; position: relative;">
             <div class="card-body p-4">
                 <h4 class="card-title mb-4">Buscar Vuelos</h4>
-                <form action="" method="get">
+                <form action="{% url 'buscar_vuelo' %}" method="get">
                     {% csrf_token %}
                     <div class="row g-3">
                         <div class="col-md-5">
                             <label for="origen" class="form-label">
                                 <i class="bi bi-geo-alt me-1 text-primary"></i>Origen
                             </label>
-                            <select class="form-select" id="origen" name="origen" required>
-                                <option value="" selected disabled>Seleccione origen</option>
-                                <option value="BUE">Buenos Aires</option>
-                                <option value="MAD">Madrid</option>
-                                <option value="MIA">Miami</option>
-                                <option value="NYC">Nueva York</option>
-                                <option value="LON">Londres</option>
+                            <select id="origen" name="origen" class="form-control">
+                                <option value="">Seleccionar origen</option>
+                                {% for aeropuerto in aeropuertos %}
+                                    <option value="{{ aeropuerto.iata }}">{{ aeropuerto.ciudad }}, {{ aeropuerto.pais }} ({{ aeropuerto.iata }})</option>
+                                {% endfor %}
                             </select>
                         </div>
-                        
                         <div class="col-md-5">
                             <label for="destino" class="form-label">
                                 <i class="bi bi-geo-alt-fill me-1 text-primary"></i>Destino
                             </label>
-                            <select class="form-select" id="destino" name="destino" required>
-                                <option value="" selected disabled>Seleccione destino</option>
-                                <option value="BUE">Buenos Aires</option>
-                                <option value="MAD">Madrid</option>
-                                <option value="MIA">Miami</option>
-                                <option value="NYC">Nueva York</option>
-                                <option value="LON">Londres</option>
-                            </select>
+                            <input list="lista_destinos" class="form-control" name="destino" id="destino" placeholder="Ej: Madrid" required>
+                            <datalist id="lista_destinos">
+                                {% for aeropuerto in aeropuertos %}
+                                    <option value="{{aeropuerto.iata}}">{{ aeropuerto.ciudad }}, {{ aeropuerto.pais }} ({{aeropuerto.iata}})</option>
+                                {% endfor %}
+                            </datalist>
                         </div>
-                        
                         <div class="col-md-2">
                             <label for="fecha" class="form-label">
                                 <i class="bi bi-calendar-event me-1 text-primary"></i>Fecha
@@ -76,7 +70,7 @@
                         </div>
                     </div>
                     
-                    <div class="text-center mt-4">
+                    <div class="mt-4">
                         <button type="submit" class="btn btn-primary px-4">
                             <i class="bi bi-search me-2"></i>Buscar Vuelos
                         </button>
@@ -95,46 +89,78 @@
         
         <div class="row text-center g-4">
             <div class="col-md-3">
-                <div class="card h-100 feature-card shadow-sm border-0">
-                    <div class="card-body p-4">
-                        <div class="feature-icon mx-auto mb-4">
+                <div class="card h-100 feature-card shadow-sm border-0"
+                    style="background-image: url({% static 'img/bg-feature-card-1.png' %}); background-size: cover;
+                        background-position: center; height: 300px; border-radius: 12px;">
+                    
+                    <!-- Overlay oscuro semitransparente -->
+                    <div class="position-absolute top-0 start-0 w-100 h-100"
+                        style="background-color: rgba(0, 0, 0, 0.4); border-radius: 12px;"></div>
+
+                    <!-- Contenido -->
+                    <div class="card-body p-4 position-relative z-1">
+                        <div class="feature-icon mx-auto mb-4 fs-1">
                             <i class="bi bi-emoji-smile"></i>
                         </div>
-                        <h5 class="card-title">Atención de calidad</h5>
-                        <p class="card-text text-muted">Nuestra flota está equipada con la última tecnología para garantizar seguridad y confort.</p>
+                        <h5 class="card-title fw-bold">Atención de calidad</h5>
+                        <p class="card-text fw-semibold">Nuestra flota está equipada con la última tecnología para garantizar seguridad y confort.</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card h-100 feature-card shadow-sm border-0">
-                    <div class="card-body p-4">
-                        <div class="feature-icon mx-auto mb-4">
+                <div class="card h-100 feature-card shadow-sm border-0" 
+                    style="background-image: url({% static 'img/bg-feature-card-2.png' %}); background-size: cover;
+                        background-position: center; height: 300px; border-radius: 12px; position: relative;">
+
+                    <!-- Overlay oscuro semitransparente -->
+                    <div class="position-absolute top-0 start-0 w-100 h-100"
+                        style="background-color: rgba(0, 0, 0, 0.4); border-radius: 12px;"></div>
+
+                    <!-- Contenido -->
+                    <div class="card-body p-4 position-relative z-1">
+                        <div class="feature-icon mx-auto mb-4 fs-1">
                             <i class="bi bi-airplane-engines"></i>
                         </div>
                         <h5 class="card-title">Aviones modernos</h5>
-                        <p class="card-text text-muted">Viajás en aeronaves nuevas, confortables y con el mejor servicio a bordo.</p>
+                        <p class="card-text ">Viajás en aeronaves nuevas, confortables y con el mejor servicio a bordo.</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card h-100 feature-card shadow-sm border-0">
-                    <div class="card-body p-4">
-                        <div class="feature-icon mx-auto mb-4">
+                <div class="card h-100 feature-card shadow-sm border-0" 
+                style="background-image: url({% static 'img/bg-feature-card-3.jpeg' %}); background-size: cover;
+                    background-position: center; height: 300px; border-radius: 12px; position: relative;">
+                    
+                    <!-- Overlay oscuro semitransparente -->
+                    <div class="position-absolute top-0 start-0 w-100 h-100"
+                        style="background-color: rgba(0, 0, 0, 0.4); border-radius: 12px;"></div>
+
+                    <!-- Contenido -->
+                    <div class="card-body p-4 position-relative z-1">
+                        <div class="feature-icon mx-auto mb-4 fs-1">
                             <i class="bi bi-globe-americas"></i>
                         </div>
                         <h5 class="card-title">Conexión internacional</h5>
-                        <p class="card-text text-muted">Llegá a más de 150 destinos en todo el mundo con opciones de horarios accesibles.</p>
+                        <p class="card-text">Llegá a más de 150 destinos en todo el mundo con opciones de horarios accesibles.</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card h-100 feature-card shadow-sm border-0">
-                    <div class="card-body p-4">
-                        <div class="feature-icon mx-auto mb-4">
+                <div class="card h-100 feature-card shadow-sm border-0" 
+                style="background-image: url({% static 'img/bg-feature-card-4.png' %}); background-size: cover;
+                    background-position: center; height: 300px; border-radius: 12px; position: relative;">
+                    
+                    <!-- Overlay oscuro semitransparente -->
+                    <div class="position-absolute top-0 start-0 w-100 h-100"
+                        style="background-color: rgba(0, 0, 0, 0.4); border-radius: 12px;"></div>
+
+                    <!-- Contenido -->
+                    <div class="card-body p-4 position-relative z-1">
+                        <div class="feature-icon mx-auto mb-4 fs-1">
                             <i class="bi bi-calendar-check"></i>
                         </div>
                         <h5 class="card-title">Vuelos diarios</h5>
-                        <p class="card-text text-muted">Más de 500 vuelos diarios a todo el mundo, para que puedas disfrutar de tus destinos favoritos.</p>
+                        <p class="card-text">Más de 500 vuelos diarios a todo el mundo, para que puedas disfrutar de tus destinos favoritos.</p>
                     </div>
                 </div>
             </div>
@@ -246,30 +272,44 @@
         .feature-icon {
             width: 70px;
             height: 70px;
-            background-color: rgba(13, 110, 253, 0.1);
+            background-color: rgba(0, 0, 0, 0.288);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.75rem;
-            color: #0d6efd;
+            color: white;
             transition: all 0.3s ease;
+            
         }
         
         .feature-card {
             transition: all 0.3s ease;
             border-radius: 12px;
+
         }
         
+        .feature-card .card-title,
+        .feature-card .card-text {
+            color: white;
+            opacity: 0.8;
+        }
+
         .feature-card:hover {
             transform: translateY(-10px);
         }
         
         .feature-card:hover .feature-icon {
-            background-color: #0d6efd;
-            color: white;
+            opacity: 1;
+            background-color: rgba(0, 0, 0, 0.5);
+            transform: scale(1.03);
         }
         
+        .feature-card:hover .card-title,
+        .feature-card:hover .card-text {
+            opacity: 1;
+        }
+
         .search-card {
             background-color: white;
         }
@@ -305,5 +345,10 @@
                 }
             });
         });
+
+        // Initialize Tom Select for better select inputs
+        new TomSelect('#origen');
+        new TomSelect('#destino');
+
     </script>
 {% endblock %}

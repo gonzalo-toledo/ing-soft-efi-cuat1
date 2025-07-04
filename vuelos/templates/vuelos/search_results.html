@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Resultados de búsqueda{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4 text-center">Resultados de búsqueda</h1>
+
+    {% if vuelos %}
+        <div class="row g-4">
+            {% for vuelo in vuelos %}
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card flight-card h-100 shadow border-0">
+                        <div class="card-header bg-light text-center border-0">
+                            <div class="d-flex align-items-center justify-content-center gap-3">
+                                <div class="text-center">
+                                    <div class="fw-bold fs-5">{{ vuelo.origen.iata }}</div>
+                                    <small class="text-muted">{{ vuelo.origen.ciudad }}</small>
+                                </div>
+                                <div class="fs-3">✈️</div>
+                                <div class="text-center">
+                                    <div class="fw-bold fs-5">{{ vuelo.destino.iata }}</div>
+                                    <small class="text-muted">{{ vuelo.destino.ciudad }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <small class="text-muted">Salida</small>
+                                    <div class="fw-semibold">{{ vuelo.fecha_salida|date:"d/m/Y" }}</div>
+                                    <div class="text-primary">{{ vuelo.fecha_salida|time:"H:i" }}</div>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Llegada</small>
+                                    <div class="fw-semibold">{{ vuelo.fecha_llegada|date:"d/m/Y" }}</div>
+                                    <div class="text-primary">{{ vuelo.fecha_llegada|time:"H:i" }}</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <small class="text-muted">Avión</small>
+                                    <div class="fw-semibold">{{ vuelo.avion.modelo }}</div>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Precio</small>
+                                    <div class="fw-semibold text-success">${{ vuelo.precio_base }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning text-center">
+            No se encontraron vuelos que coincidan con tu búsqueda.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,86 +1,199 @@
 {% extends "base.html" %}
 {% block title %}Lista de Vuelos{% endblock %}
 {% block content %}
-            {% if vuelos %}
-                <!-- Flights Grid -->
-                <div class="row g-4">
-                    {% for vuelo in vuelos %}
-                    <div class="col-12 col-lg-6 col-xl-4">
-                        <div class="card flight-card h-100 border-0 shadow">
-                            <!-- Flight Route Header -->
-                            <div class="card-header route-badge text-black text-center py-3 border-0">
-                                <div class="d-flex align-items-center justify-content-center gap-3">
-                                    <div class="text-center">
-                                        <div class="fw-bold fs-5">{{ vuelo.origen.iata }}</div>
-                                        <small class="opacity-75">{{ vuelo.origen.ciudad }}</small>
-                                    </div>
-                                    <div class="fs-3">✈️</div>
-                                    <div class="text-center">
-                                        <div class="fw-bold fs-5">{{ vuelo.destino.iata }}</div>
-                                        <small class="opacity-75">{{ vuelo.destino.ciudad }}</small>
-                                    </div>
-                                </div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">Lista de Vuelos</h1>
+            
+            <!-- Filtros de Búsqueda -->
+            <div class="card mb-4 border-0 shadow">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        🔍 Filtros de Búsqueda
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="GET" action="{% url 'buscar_vuelos' %}" class="filter-form">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label for="origen" class="form-label">Origen</label>
+                                <select name="origen" id="origen" class="form-select">
+                                    <option value="">Seleccionar origen</option>
+                                    {% if origenes_unicos %}
+                                        {% for iata, ciudad in origenes_unicos %}
+                                            <option value="{{ iata }}" 
+                                                    {% if request.GET.origen == iata %}selected{% endif %}>
+                                                {{ ciudad }} ({{ iata }})
+                                            </option>
+                                        {% endfor %}
+                                    {% else %}
+                                        {% regroup vuelos by origen as origenes_grupo %}
+                                        {% for origen_grupo in origenes_grupo %}
+                                            <option value="{{ origen_grupo.grouper.iata }}" 
+                                                    {% if request.GET.origen == origen_grupo.grouper.iata %}selected{% endif %}>
+                                                {{ origen_grupo.grouper.ciudad }} ({{ origen_grupo.grouper.iata }})
+                                            </option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
                             </div>
-                            
-                            <!-- Flight Details -->
-                            <div class="card-body flight-details">
-                                <div class="row g-3 mb-3">
-                                    <div class="col-6">
-                                        <div class="text-muted small">SALIDA</div>
-                                        <div class="fw-semibold">{{ vuelo.fecha_salida|date:"d/m/Y" }}</div>
-                                        <div class="text-primary">{{ vuelo.fecha_salida|date:"H:i" }}</div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="text-muted small">LLEGADA</div>
-                                        <div class="fw-semibold">{{ vuelo.fecha_llegada|date:"d/m/Y" }}</div>
-                                        <div class="text-primary">{{ vuelo.fecha_llegada|date:"H:i" }}</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="row g-3 mb-3">
-                                    <div class="col-12">
-                                        <div class="d-flex align-items-center gap-2 mb-2">
-                                            <i class="text-muted">🛩️</i>
-                                            <span class="text-muted small">AERONAVE:</span>
-                                            <span class="fw-semibold">{{ vuelo.avion.modelo }}</span>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <i class="text-muted">📍</i>
-                                            <span class="text-muted small">ESTADO:</span>
-                                            {% if vuelo.estado == 'Programado' %}
-                                                <span class="badge bg-success">{{ vuelo.estado }}</span>
-                                            {% elif vuelo.estado == 'En Vuelo' %}
-                                                <span class="badge bg-warning">{{ vuelo.estado }}</span>
-                                            {% elif vuelo.estado == 'Completado' %}
-                                                <span class="badge bg-secondary">{{ vuelo.estado }}</span>
-                                            {% else %}
-                                                <span class="badge bg-danger">{{ vuelo.estado }}</span>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="col-md-3">
+                                <label for="destino" class="form-label">Destino</label>
+                                <select name="destino" id="destino" class="form-select">
+                                    <option value="">Seleccionar destino</option>
+                                    {% if destinos_unicos %}
+                                        {% for iata, ciudad in destinos_unicos %}
+                                            <option value="{{ iata }}"
+                                                    {% if request.GET.destino == iata %}selected{% endif %}>
+                                                {{ ciudad }} ({{ iata }})
+                                            </option>
+                                        {% endfor %}
+                                    {% else %}
+                                        {% regroup vuelos by destino as destinos_grupo %}
+                                        {% for destino_grupo in destinos_grupo %}
+                                            <option value="{{ destino_grupo.grouper.iata }}"
+                                                    {% if request.GET.destino == destino_grupo.grouper.iata %}selected{% endif %}>
+                                                {{ destino_grupo.grouper.ciudad }} ({{ destino_grupo.grouper.iata }})
+                                            </option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
                             </div>
-                            
-                            <!-- Price and Action -->
-                            <div class="card-footer bg-light border-0 d-flex justify-content-between align-items-center">
-                                <div>
-                                    <div class="text-muted small">DESDE</div>
-                                    <div class="price-highlight">${{ vuelo.precio_base }}</div>
+                            <div class="col-md-3">
+                                <label for="fecha" class="form-label">Fecha de Salida</label>
+                                <input type="date" name="fecha" id="fecha" class="form-control" 
+                                       value="{{ request.GET.fecha }}" min="{% now 'Y-m-d' %}">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label d-block">&nbsp;</label>
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        🔍 Buscar
+                                    </button>
+                                    <a href="{% url 'vuelo_list' %}" class="btn btn-outline-secondary">
+                                        🗑️ Limpiar
+                                    </a>
                                 </div>
-                                <a href="{% url 'vuelo_detail' vuelo_id=vuelo.id %}" 
-                                   class="btn btn-primary btn-lg rounded-pill px-4">
-                                    Ver Asientos
-                                </a>
                             </div>
                         </div>
+                    </form>
+                    
+                    <!-- Contador de resultados -->
+                    <div class="mt-3 pt-3 border-top">
+                        <span class="text-muted">
+                            📊 Mostrando {{ vuelos|length }} vuelos
+                            {% if request.GET.origen or request.GET.destino or request.GET.fecha %}
+                                (filtrados)
+                            {% endif %}
+                        </span>
+                        {% if request.GET.origen or request.GET.destino or request.GET.fecha %}
+                            <div class="mt-2">
+                                <span class="text-muted">Filtros activos:</span>
+                                {% if request.GET.origen %}
+                                    <span class="badge bg-primary me-1">Origen: {{ request.GET.origen }}</span>
+                                {% endif %}
+                                {% if request.GET.destino %}
+                                    <span class="badge bg-success me-1">Destino: {{ request.GET.destino }}</span>
+                                {% endif %}
+                                {% if request.GET.fecha %}
+                                    <span class="badge bg-info me-1">Fecha: {{ request.GET.fecha }}</span>
+                                {% endif %}
+                            </div>
+                        {% endif %}
                     </div>
-                    {% endfor %}
+                </div>
+            </div>
+
+            {% if vuelos %}
+                <!-- Tabla de Vuelos -->
+                <div class="card border-0 shadow">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th scope="col">✈️ Ruta</th>
+                                        <th scope="col">📅 Fecha y Hora</th>
+                                        <th scope="col">🛩️ Aeronave</th>
+                                        <th scope="col">📍 Estado</th>
+                                        <th scope="col">💰 Precio</th>
+                                        <th scope="col">⚡ Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for vuelo in vuelos %}
+                                    <tr class="vuelo-row">
+                                        <td>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="text-center">
+                                                    <div class="fw-bold fs-6">{{ vuelo.origen.iata }}</div>
+                                                    <small class="text-muted">{{ vuelo.origen.ciudad }}</small>
+                                                </div>
+                                                <div class="text-primary fs-5">→</div>
+                                                <div class="text-center">
+                                                    <div class="fw-bold fs-6">{{ vuelo.destino.iata }}</div>
+                                                    <small class="text-muted">{{ vuelo.destino.ciudad }}</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <div class="fw-semibold">{{ vuelo.fecha_salida|date:"d/m/Y" }}</div>
+                                                <div class="small">
+                                                    <span class="text-muted">Salida:</span>
+                                                    <span class="text-primary">{{ vuelo.fecha_salida|date:"H:i" }}</span>
+                                                    <br>
+                                                    <span class="text-muted">Llegada:</span>
+                                                    <span class="text-success">{{ vuelo.fecha_llegada|date:"H:i" }}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <div class="fw-semibold">{{ vuelo.avion.modelo }}</div>
+                                                <small class="text-muted">{{ vuelo.avion.marca }}</small>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {% if vuelo.estado == 'Programado' %}
+                                                <span class="badge bg-success">✅ {{ vuelo.estado }}</span>
+                                            {% elif vuelo.estado == 'En Vuelo' %}
+                                                <span class="badge bg-warning">⏳ {{ vuelo.estado }}</span>
+                                            {% elif vuelo.estado == 'Completado' %}
+                                                <span class="badge bg-secondary">✔️ {{ vuelo.estado }}</span>
+                                            {% elif vuelo.estado == 'Cancelado' %}
+                                                <span class="badge bg-danger">❌ {{ vuelo.estado }}</span>
+                                            {% else %}
+                                                <span class="badge bg-info">ℹ️ {{ vuelo.estado }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="text-center">
+                                                <div class="text-muted small">Desde</div>
+                                                <div class="fw-bold text-primary fs-5">${{ vuelo.precio_base|floatformat:0 }}</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex flex-column gap-1">
+                                                <a href="{% url 'vuelo_detail' vuelo_id=vuelo.id %}" 
+                                                   class="btn btn-primary btn-sm rounded-pill">
+                                                    Ver Asientos
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
                 
-                <!-- Summary Stats -->
-                <div class="card mt-5 border-0 shadow">
-                    <div class="card-body text-center">
-                        <div class="row">
+                <!-- Estadísticas -->
+                <div class="card mt-4 border-0 shadow">
+                    <div class="card-body">
+                        <div class="row text-center">
                             <div class="col-12 col-md-4 mb-3 mb-md-0">
                                 <div class="display-6 fw-bold text-primary">{{ vuelos|length }}</div>
                                 <div class="text-muted">Vuelos Disponibles</div>
@@ -98,17 +211,27 @@
                 </div>
                 
             {% else %}
-                <!-- No Flights Available -->
+                <!-- Sin Vuelos -->
                 <div class="card border-0 shadow text-center">
                     <div class="card-body py-5">
                         <div class="display-1 mb-3">✈️</div>
                         <h3 class="text-muted mb-3">No hay vuelos disponibles</h3>
-                        <p class="text-muted">En este momento no tenemos vuelos programados. Por favor, vuelve a consultar más tarde.</p>
+                        <p class="text-muted">
+                            {% if request.GET.origen or request.GET.destino or request.GET.fecha %}
+                                No se encontraron vuelos que coincidan con los filtros seleccionados.
+                                <br>
+                                <a href="{% url 'vuelo_list' %}" class="btn btn-outline-primary mt-3">
+                                    Ver todos los vuelos
+                                </a>
+                            {% else %}
+                                En este momento no tenemos vuelos programados. Por favor, vuelve a consultar más tarde.
+                            {% endif %}
+                        </p>
                     </div>
                 </div>
             {% endif %}
             
-            <!-- Navigation Links -->
+            <!-- Enlaces de Navegación -->
             <div class="card mt-4 border-0 shadow">
                 <div class="card-body">
                     <div class="d-flex flex-wrap gap-3 justify-content-center">
@@ -126,5 +249,98 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+/* Estilos CSS puros para mejorar la apariencia */
+.vuelo-row {
+    transition: background-color 0.2s ease;
+}
+
+.vuelo-row:hover {
+    background-color: rgba(0, 123, 255, 0.05);
+}
+
+.table-responsive {
+    border-radius: 0.375rem;
+}
+
+.filter-form {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: -1rem;
+}
+
+/* Animaciones CSS puras */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.vuelo-row {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+    
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+    
+    .filter-form .row {
+        --bs-gutter-x: 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .table td {
+        padding: 0.5rem 0.25rem;
+    }
+    
+    .display-6 {
+        font-size: 2rem;
+    }
+    
+    .filter-form {
+        padding: 0.5rem;
+    }
+}
+
+/* Mejoras visuales */
+.badge {
+    font-size: 0.75rem;
+    padding: 0.5em 0.75em;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+}
+
+.btn-outline-secondary:hover {
+    transform: translateY(-1px);
+}
+
+/* Indicadores visuales para filtros activos */
+.form-select:focus,
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Evitar duplicados en los selects */
+.form-select option[value=""]:not(:first-child) {
+    display: none;
+}
+</style>
 
 {% endblock %}

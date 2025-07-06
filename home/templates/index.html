@@ -17,9 +17,6 @@
                         Gestiona tus vuelos con una plataforma moderna e intuitiva. Descubre nuevos destinos con nuestro servicio premium.
                     </p>
                     <div>
-                        <button class="btn btn-primary btn-lg px-4" type="button" data-bs-toggle="modal" data-bs-target="#searchModal">
-                            <i class="bi bi-search me-2"></i>Buscar Vuelos
-                        </button>
                         {% if not user.is_authenticated %}
                         <button class="btn btn-outline-light btn-lg ms-3 px-4" type="button" data-bs-toggle="modal"
                             data-bs-target="#registerModal">
@@ -37,7 +34,7 @@
         <div class="card search-card mb-5 shadow" style="margin-top: -100px; border-radius: 15px; z-index: 100; position: relative;">
             <div class="card-body p-4">
                 <h4 class="card-title mb-4">Buscar Vuelos</h4>
-                <form action="{% url 'buscar_vuelo' %}" method="get" id="form-busqueda">
+                <form action="{% url 'buscar_vuelos' %}" method="get" id="form-busqueda">
                     {% csrf_token %}
                     <div class="row g-3">
                         <div class="col-md-5">

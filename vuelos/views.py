@@ -6,7 +6,7 @@ from django.db.models.functions import TruncDate
 from django.contrib import messages
 from django.shortcuts import redirect
 from datetime import date
-
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 class VueloList(ListView):
     model = Vuelo
@@ -15,7 +15,21 @@ class VueloList(ListView):
     
     def get_queryset(self):
         # Solo mostrar vuelos programados
-        return Vuelo.objects.filter(estado='Programado').select_related('avion', 'origen', 'destino')
+        return Vuelo.objects.filter(estado='Programado').select_related('avion', 'origen', 'destino')    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Agregar información adicional para los filtros
+        vuelos = self.get_queryset()
+        
+        # Obtener origenes y destinos únicos para los filtros
+        origenes_unicos = vuelos.values_list('origen__iata', 'origen__ciudad').distinct().order_by('origen__ciudad')
+        destinos_unicos = vuelos.values_list('destino__iata', 'destino__ciudad').distinct().order_by('destino__ciudad')
+        
+        context['origenes_unicos'] = origenes_unicos
+        context['destinos_unicos'] = destinos_unicos
+        
+        return context
 
 
 class VueloDetailView(DetailView):
@@ -57,7 +71,7 @@ class VueloDetailView(DetailView):
     
 class BuscarVueloView(ListView):
     model = Vuelo
-    template_name = 'vuelos/search_results.html'
+    template_name = 'vuelos/list.html'  # Usar el mismo template
     context_object_name = 'vuelos'
 
     def get(self, request, *args, **kwargs):
@@ -68,12 +82,12 @@ class BuscarVueloView(ListView):
         # Validación: origen y destino no pueden ser iguales
         if origen and destino and origen == destino:
             messages.error(request, "El origen y el destino no pueden ser iguales.")
-            return redirect('index')
+            return redirect('vuelo_list')
 
         # Validación: fecha no puede ser anterior a hoy
         if fecha and fecha < date.today().isoformat():
             messages.error(request, "La fecha no puede ser anterior a hoy.")
-            return redirect('index')
+            return redirect('vuelo_list')
 
         return super().get(request, *args, **kwargs)
 
@@ -94,3 +108,109 @@ class BuscarVueloView(ListView):
             ).filter(fecha_solo=fecha)
 
         return queryset.select_related('avion', 'origen', 'destino')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Obtener todos los vuelos para los filtros (sin filtrar)
+        todos_vuelos = Vuelo.objects.filter(estado='Programado').select_related('avion', 'origen', 'destino')
+        
+        # Obtener origenes y destinos únicos para los filtros
+        origenes_unicos = todos_vuelos.values_list('origen__iata', 'origen__ciudad').distinct().order_by('origen__ciudad')
+        destinos_unicos = todos_vuelos.values_list('destino__iata', 'destino__ciudad').distinct().order_by('destino__ciudad')
+        
+        context['origenes_unicos'] = origenes_unicos
+        context['destinos_unicos'] = destinos_unicos
+        
+        # Agregar información de filtros activos
+        context['filtros_activos'] = {
+            'origen': self.request.GET.get('origen'),
+            'destino': self.request.GET.get('destino'),
+            'fecha': self.request.GET.get('fecha'),
+        }
+        
+        return context
+
+# Mixin y vistas para staff
+
+class StaffRequiredMixin(UserPassesTestMixin):
+    """Mixin para verificar que el usuario sea staff"""
+    def test_func(self):
+        return self.request.user.is_staff
+    
+
+class VuelosPasajerosStaffView(StaffRequiredMixin, ListView):
+    """Vista para mostrar todos los vuelos con sus pasajeros - Solo para staff"""
+    model = Vuelo
+    template_name = 'staff/staff_pasajeros.html'
+    context_object_name = 'vuelos'
+    
+    def get_queryset(self):
+        return Vuelo.objects.filter(
+            estado__in=['Programado', 'En Vuelo', 'Aterrizado']
+        ).select_related('avion', 'origen', 'destino').prefetch_related(
+            'reserva_set__pasajero',
+            'reserva_set__asiento'
+        ).order_by('-fecha_salida')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Obtener información de pasajeros para cada vuelo
+        vuelos_con_pasajeros = []
+        for vuelo in context['vuelos']:
+            reservas = vuelo.reserva_set.filter(
+                estado__in=['Confirmada', 'Pendiente']
+            ).select_related('pasajero__usuario', 'asiento')
+            
+            pasajeros = []
+            for reserva in reservas:
+                pasajeros.append({
+                    'pasajero': reserva.pasajero,
+                    'asiento': reserva.asiento,
+                    'estado_reserva': reserva.estado,
+                    'fecha_reserva': reserva.fecha_reserva if hasattr(reserva, 'fecha_reserva') else None
+                })
+            
+            vuelos_con_pasajeros.append({
+                'vuelo': vuelo,
+                'pasajeros': pasajeros,
+                'total_pasajeros': len(pasajeros)
+            })
+        
+        context['vuelos'] = vuelos_con_pasajeros
+        return context
+
+
+class VueloPasajerosDetailStaffView(StaffRequiredMixin, DetailView):
+    """Vista detallada de un vuelo específico con sus pasajeros - Solo para staff"""
+    model = Vuelo
+    template_name = 'staff/staff_vuelo_detail.html'
+    context_object_name = 'vuelo'
+    pk_url_kwarg = 'vuelo_id'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        vuelo = self.get_object()
+        
+        # Obtener todas las reservas del vuelo
+        reservas = Reserva.objects.filter(vuelo=vuelo).select_related(
+            'pasajero', 'asiento'
+        ).order_by('asiento__numero')
+        
+        # Separar por estado
+        reservas_confirmadas = reservas.filter(estado='Confirmada')
+        reservas_pendientes = reservas.filter(estado='Pendiente')
+        reservas_canceladas = reservas.filter(estado='Cancelada')
+        
+        context.update({
+            'reservas_confirmadas': reservas_confirmadas,
+            'reservas_pendientes': reservas_pendientes,
+            'reservas_canceladas': reservas_canceladas,
+            'total_reservas': reservas.count(),
+            'total_confirmadas': reservas_confirmadas.count(),
+            'total_pendientes': reservas_pendientes.count(),
+            'total_canceladas': reservas_canceladas.count(),
+        })
+        
+        return context

@@ -7,51 +7,80 @@
     <h1 class="mb-4 text-center">Resultados de búsqueda</h1>
 
     {% if vuelos %}
-        <div class="row g-4">
-            {% for vuelo in vuelos %}
-                <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card flight-card h-100 shadow border-0">
-                        <div class="card-header bg-light text-center border-0">
-                            <div class="d-flex align-items-center justify-content-center gap-3">
-                                <div class="text-center">
-                                    <div class="fw-bold fs-5">{{ vuelo.origen.iata }}</div>
-                                    <small class="text-muted">{{ vuelo.origen.ciudad }}</small>
-                                </div>
-                                <div class="fs-3">✈️</div>
-                                <div class="text-center">
-                                    <div class="fw-bold fs-5">{{ vuelo.destino.iata }}</div>
-                                    <small class="text-muted">{{ vuelo.destino.ciudad }}</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row mb-3">
-                                <div class="col-6">
-                                    <small class="text-muted">Salida</small>
-                                    <div class="fw-semibold">{{ vuelo.fecha_salida|date:"d/m/Y" }}</div>
-                                    <div class="text-primary">{{ vuelo.fecha_salida|time:"H:i" }}</div>
-                                </div>
-                                <div class="col-6">
-                                    <small class="text-muted">Llegada</small>
-                                    <div class="fw-semibold">{{ vuelo.fecha_llegada|date:"d/m/Y" }}</div>
-                                    <div class="text-primary">{{ vuelo.fecha_llegada|time:"H:i" }}</div>
+                <!-- Flights Grid -->
+                <div class="row g-4">
+                    {% for vuelo in vuelos %}
+                    <div class="col-12 col-lg-6 col-xl-4">
+                        <div class="card flight-card h-100 border-0 shadow">
+                            <!-- Flight Route Header -->
+                            <div class="card-header route-badge text-black text-center py-3 border-0">
+                                <div class="d-flex align-items-center justify-content-center gap-3">
+                                    <div class="text-center">
+                                        <div class="fw-bold fs-5">{{ vuelo.origen.iata }}</div>
+                                        <small class="opacity-75">{{ vuelo.origen.ciudad }}</small>
+                                    </div>
+                                    <div class="fs-3">✈️</div>
+                                    <div class="text-center">
+                                        <div class="fw-bold fs-5">{{ vuelo.destino.iata }}</div>
+                                        <small class="opacity-75">{{ vuelo.destino.ciudad }}</small>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <small class="text-muted">Avión</small>
-                                    <div class="fw-semibold">{{ vuelo.avion.modelo }}</div>
+                            
+                            <!-- Flight Details -->
+                            <div class="card-body flight-details">
+                                <div class="row g-3 mb-3">
+                                    <div class="col-6">
+                                        <div class="text-muted small">SALIDA</div>
+                                        <div class="fw-semibold">{{ vuelo.fecha_salida|date:"d/m/Y" }}</div>
+                                        <div class="text-primary">{{ vuelo.fecha_salida|date:"H:i" }}</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="text-muted small">LLEGADA</div>
+                                        <div class="fw-semibold">{{ vuelo.fecha_llegada|date:"d/m/Y" }}</div>
+                                        <div class="text-primary">{{ vuelo.fecha_llegada|date:"H:i" }}</div>
+                                    </div>
                                 </div>
-                                <div class="col-6">
-                                    <small class="text-muted">Precio</small>
-                                    <div class="fw-semibold text-success">${{ vuelo.precio_base }}</div>
+                                
+                                <div class="row g-3 mb-3">
+                                    <div class="col-12">
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <i class="text-muted">🛩️</i>
+                                            <span class="text-muted small">AERONAVE:</span>
+                                            <span class="fw-semibold">{{ vuelo.avion.modelo }}</span>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i class="text-muted">📍</i>
+                                            <span class="text-muted small">ESTADO:</span>
+                                            {% if vuelo.estado == 'Programado' %}
+                                                <span class="badge bg-success">{{ vuelo.estado }}</span>
+                                            {% elif vuelo.estado == 'En Vuelo' %}
+                                                <span class="badge bg-warning">{{ vuelo.estado }}</span>
+                                            {% elif vuelo.estado == 'Completado' %}
+                                                <span class="badge bg-secondary">{{ vuelo.estado }}</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">{{ vuelo.estado }}</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
                                 </div>
+                            </div>
+                            
+                            <!-- Price and Action -->
+                            <div class="card-footer bg-light border-0 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="text-muted small">DESDE</div>
+                                    <div class="price-highlight">${{ vuelo.precio_base }}</div>
+                                </div>
+                                <a href="{% url 'vuelo_detail' vuelo_id=vuelo.id %}" 
+                                   class="btn btn-primary btn-lg rounded-pill px-4">
+                                    Ver Asientos
+                                </a>
                             </div>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
-        </div>
     {% else %}
         <div class="alert alert-warning text-center">
             No se encontraron vuelos que coincidan con tu búsqueda.

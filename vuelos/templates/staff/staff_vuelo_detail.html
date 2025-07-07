@@ -1,0 +1,335 @@
+{% extends 'base.html' %}
+
+{% block title %}Panel Staff - Detalle Vuelo {{ vuelo.id }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3">
+                    <i class="bi bi-shield-check text-warning"></i> Detalle Vuelo {{ vuelo.id }}
+                </h1>
+                <div>
+                    <a href="{% url 'vuelos_pasajeros_staff' %}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Volver
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información del vuelo -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-airplane"></i> Información del Vuelo
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Origen:</strong> {{ vuelo.origen.nombre }} ({{ vuelo.origen.iata }})</p>
+                            <p><strong>Ciudad:</strong> {{ vuelo.origen.ciudad }}, {{ vuelo.origen.provincia }}</p>
+                            <p><strong>Fecha Salida:</strong> {{ vuelo.fecha_salida|date:"d/m/Y H:i" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Destino:</strong> {{ vuelo.destino.nombre }} ({{ vuelo.destino.iata }})</p>
+                            <p><strong>Ciudad:</strong> {{ vuelo.destino.ciudad }}, {{ vuelo.destino.provincia }}</p>
+                            <p><strong>Fecha Llegada:</strong> {{ vuelo.fecha_llegada|date:"d/m/Y H:i" }}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Avión:</strong> {{ vuelo.avion.modelo }}</p>
+                            <p><strong>Capacidad:</strong> {{ vuelo.avion.capacidad }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Estado:</strong> 
+                                {% if vuelo.estado == 'Programado' %}
+                                    <span class="badge bg-warning text-dark">{{ vuelo.estado }}</span>
+                                {% elif vuelo.estado == 'En Vuelo' %}
+                                    <span class="badge bg-primary">{{ vuelo.estado }}</span>
+                                {% elif vuelo.estado == 'Aterrizado' %}
+                                    <span class="badge bg-success">{{ vuelo.estado }}</span>
+                                {% elif vuelo.estado == 'Cancelado' %}
+                                    <span class="badge bg-danger">{{ vuelo.estado }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ vuelo.estado }}</span>
+                                {% endif %}
+                            </p>
+                            <p><strong>Duración:</strong> {{ vuelo.duracion }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-bar-chart"></i> Estadísticas
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <h4 class="text-success">{{ total_confirmadas }}</h4>
+                            <small>Confirmadas</small>
+                        </div>
+                        <div class="col-6">
+                            <h4 class="text-warning">{{ total_pendientes }}</h4>
+                            <small>Pendientes</small>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <h4 class="text-danger">{{ total_canceladas }}</h4>
+                            <small>Canceladas</small>
+                        </div>
+                        <div class="col-6">
+                            <h4 class="text-primary">{{ total_reservas }}</h4>
+                            <small>Total</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reservas Confirmadas -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-check-circle text-success"></i> Reservas Confirmadas ({{ total_confirmadas }})
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if reservas_confirmadas %}
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead class="table-success">
+                                    <tr>
+                                        <th>Pasajero</th>
+                                        <th>Email</th>
+                                        <th>Asiento</th>
+                                        <th>Clase</th>
+                                        <th>Fecha Reserva</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for reserva in reservas_confirmadas %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ reserva.pasajero.nombre }} {{ reserva.pasajero.apellido }}</strong>
+                                            <br>
+                                            <small class="text-muted">{{ reserva.pasajero.username }}</small>
+                                        </td>
+                                        <td>{{ reserva.pasajero.email }}</td>
+                                        <td>
+                                            <span class="badge bg-primary">{{ reserva.asiento.numero }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-info">{{ reserva.asiento.tipo }}</span>
+                                        </td>
+                                        <td>
+                                            {% if reserva.fecha_reserva %}
+                                                {{ reserva.fecha_reserva|date:"d/m/Y H:i" }}
+                                            {% else %}
+                                                <span class="text-muted">No disponible</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-3">
+                            <i class="bi bi-check-circle fs-1 text-muted"></i>
+                            <h5 class="text-muted mt-2">No hay reservas confirmadas</h5>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reservas Pendientes -->
+    {% if reservas_pendientes %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-clock text-warning"></i> Reservas Pendientes ({{ total_pendientes }})
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead class="table-warning">
+                                <tr>
+                                    <th>Pasajero</th>
+                                    <th>Email</th>
+                                    <th>Asiento</th>
+                                    <th>Clase</th>
+                                    <th>Fecha Reserva</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for reserva in reservas_pendientes %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ reserva.pasajero.nombre }} {{ reserva.pasajero.apellido }}</strong>
+                                            <br>
+                                            <small class="text-muted">{{ reserva.pasajero.username }}</small>
+                                        </td>
+                                        <td>{{ reserva.pasajero.email }}</td>
+                                        <td>
+                                            <span class="badge bg-primary">{{ reserva.asiento.numero }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-info">{{ reserva.asiento.tipo }}</span>
+                                        </td>
+                                        <td>
+                                            {% if reserva.fecha_reserva %}
+                                                {{ reserva.fecha_reserva|date:"d/m/Y H:i" }}
+                                            {% else %}
+                                                <span class="text-muted">No disponible</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Reservas Canceladas -->
+    {% if reservas_canceladas %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-x-circle text-danger"></i> Reservas Canceladas ({{ total_canceladas }})
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead class="table-danger">
+                                <tr>
+                                    <th>Pasajero</th>
+                                    <th>Email</th>
+                                    <th>Asiento</th>
+                                    <th>Clase</th>
+                                    <th>Fecha Reserva</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for reserva in reservas_canceladas %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ reserva.pasajero.nombre }} {{ reserva.pasajero.apellido }}</strong>
+                                        <br>
+                                        <small class="text-muted">{{ reserva.pasajero.username }}</small>
+                                    </td>
+                                    <td>{{ reserva.pasajero.email }}</td>
+                                    <td>
+                                        <span class="badge bg-primary">{{ reserva.asiento.numero }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">{{ reserva.asiento.tipo }}</span>
+                                    </td>
+                                    <td>
+                                        {% if reserva.fecha_reserva %}
+                                            {{ reserva.fecha_reserva|date:"d/m/Y H:i" }}
+                                        {% else %}
+                                            <span class="text-muted">No disponible</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Información adicional -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-info-circle"></i> Acciones Adicionales
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Opciones de Exportación</h6>
+                            <button class="btn btn-outline-success me-2" onclick="exportToCSV()">
+                                <i class="bi bi-file-earmark-spreadsheet"></i> Exportar a CSV
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Información del Sistema</h6>
+                            <p class="text-muted mb-0">
+                                <i class="bi bi-person-badge"></i> Consultado por: {{ user.username }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function exportToCSV() {
+    // Función básica para exportar a CSV
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += "Pasajero,Email,Asiento,Clase,Estado,Fecha Reserva\n";
+    
+    // Añadir reservas confirmadas
+    {% for reserva in reservas_confirmadas %}
+        csvContent += "{{ reserva.pasajero.nombre }} {{ reserva.pasajero.apellido }},{{ reserva.pasajero.email }},{{ reserva.asiento.numero }},{{ reserva.asiento.tipo }},Confirmada,{% if reserva.fecha_reserva %}{{ reserva.fecha_reserva|date:'d/m/Y H:i' }}{% else %}No disponible{% endif %}\n";
+    {% endfor %}
+    
+    // Añadir reservas pendientes
+    {% for reserva in reservas_pendientes %}
+        csvContent += "{{ reserva.pasajero.nombre }} {{ reserva.pasajero.apellido }},{{ reserva.pasajero.email }},{{ reserva.asiento.numero }},{{ reserva.asiento.tipo }},Pendiente,{% if reserva.fecha_reserva %}{{ reserva.fecha_reserva|date:'d/m/Y H:i' }}{% else %}No disponible{% endif %}\n";
+    {% endfor %}
+    
+    // Añadir reservas canceladas
+    {% for reserva in reservas_canceladas %}
+        csvContent += "{{ reserva.pasajero.nombre }} {{ reserva.pasajero.apellido }},{{ reserva.pasajero.email }},{{ reserva.asiento.numero }},{{ reserva.asiento.tipo }},Cancelada,{% if reserva.fecha_reserva %}{{ reserva.fecha_reserva|date:'d/m/Y H:i' }}{% else %}No disponible{% endif %}\n";
+    {% endfor %}
+    
+    var encodedUri = encodeURI(csvContent);
+    var link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "vuelo_{{ vuelo.id }}_pasajeros.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+</script>
+{% endblock %}

@@ -341,89 +341,105 @@
         }
     }
 </style>
-    <div class="content-wrapper">
-        <div class="flight-info">
-            <h2>Información del Vuelo</h2>
-            <div class="info-grid">
-                <div class="info-item">
-                    <span class="info-label">Origen:</span>
-                    <span class="info-value">{{ vuelo.origen.nombre }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Destino:</span>
-                    <span class="info-value">{{ vuelo.destino.nombre }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Salida:</span>
-                    <span class="info-value">{{ vuelo.fecha_salida|date:"d/m/Y H:i" }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Llegada:</span>
-                    <span class="info-value">{{ vuelo.fecha_llegada|date:"d/m/Y H:i" }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Avión:</span>
-                    <span class="info-value">{{ vuelo.avion.modelo }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Precio:</span>
-                    <span class="info-value">${{ vuelo.precio_base }}</span>
+    {% if user.is_authenticated %}
+        <div class="content-wrapper">
+            <div class="flight-info">
+                <h2>Información del Vuelo</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Origen:</span>
+                        <span class="info-value">{{ vuelo.origen.nombre }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Destino:</span>
+                        <span class="info-value">{{ vuelo.destino.nombre }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Salida:</span>
+                        <span class="info-value">{{ vuelo.fecha_salida|date:"d/m/Y H:i" }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Llegada:</span>
+                        <span class="info-value">{{ vuelo.fecha_llegada|date:"d/m/Y H:i" }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Avión:</span>
+                        <span class="info-value">{{ vuelo.avion.modelo }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Precio:</span>
+                        <span class="info-value">${{ vuelo.precio_base }}</span>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="stats-container">
-            <div class="stat-card">
-                <div class="stat-number">{{ total_asientos }}</div>
-                <div class="stat-label">Asientos Totales</div>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-number">{{ total_asientos }}</div>
+                    <div class="stat-label">Asientos Totales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ asientos_libres }}</div>
+                    <div class="stat-label">Disponibles</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ asientos_ocupados|length }}</div>
+                    <div class="stat-label">Ocupados</div>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number">{{ asientos_libres }}</div>
-                <div class="stat-label">Disponibles</div>
+            
+            <div class="legend">
+                <div class="legend-item legend-available">
+                    <span class="legend-color"></span>
+                    <span>Asiento Disponible</span>
+                </div>
+                <div class="legend-item legend-occupied">
+                    <span class="legend-color"></span>
+                    <span>Asiento Ocupado</span>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number">{{ asientos_ocupados|length }}</div>
-                <div class="stat-label">Ocupados</div>
-            </div>
-        </div>
-        
-        <div class="legend">
-            <div class="legend-item legend-available">
-                <span class="legend-color"></span>
-                <span>Asiento Disponible</span>
-            </div>
-            <div class="legend-item legend-occupied">
-                <span class="legend-color"></span>
-                <span>Asiento Ocupado</span>
-            </div>
-        </div>
-        
-        <div class="seats-section">
-            <h3 class="seats-title">Seleccione su Asiento Preferido</h3>
-            <div class="airplane-container">
-                <div class="seats-grid">
-                    {% for asiento in asientos_disponibles %}
+            
+            <div class="seats-section">
+                <h3 class="seats-title">Seleccione su Asiento Preferido</h3>
+                <div class="airplane-container">
+                    <div class="seats-grid">
+                        {% for asiento in asientos_disponibles %}
+                            
+                            <a href="{% url 'reserva_create' vuelo_id=vuelo.id asiento_id=asiento.id %}" 
+                            class="seat available" 
+                            title="Asiento {{ asiento.numero }} - {{ asiento.tipo }} - Disponible">
+                                {{ asiento.numero }}<br>{{ asiento.tipo }}
+                            </a>
+                        {% endfor %}
                         
-                        <a href="{% url 'reserva_create' vuelo_id=vuelo.id asiento_id=asiento.id %}" 
-                           class="seat available" 
-                           title="Asiento {{ asiento.numero }} - {{ asiento.tipo }} - Disponible">
-                            {{ asiento.numero }}<br>{{ asiento.tipo }}
-                        </a>
-                    {% endfor %}
-                    
-                    {% for asiento in asientos_ocupados %}
-                        <div class="seat occupied" 
-                             title="Asiento {{ asiento.numero }} - {{ asiento.tipo }} - Ocupado">
-                            {{ asiento.numero }}<br>{{ asiento.tipo }}
-                        </div>
-                    {% endfor %}
+                        {% for asiento in asientos_ocupados %}
+                            <div class="seat occupied" 
+                                title="Asiento {{ asiento.numero }} - {{ asiento.tipo }} - Ocupado">
+                                {{ asiento.numero }}<br>{{ asiento.tipo }}
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
+            
+            <a href="{% url 'vuelo_list' %}" class="back-button">
+                ← Volver a Vuelos
+            </a>
         </div>
-        
-        <a href="{% url 'vuelo_list' %}" class="back-button">
-            ← Volver a Vuelos
-        </a>
     </div>
-</div>
+    {% else %}
+    <div class="container">
+        <div class="header">
+            <h1>Acceso Denegado</h1>
+            <p>Por favor, inicia sesión para ver los detalles del vuelo.</p>
+        </div>
+        <div class="content-wrapper text-center">
+            <button><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar sesión</a></button>
+        </div>
+    </div>
+    {% endif %}
+    <div>
+        {% include 'account/login_modal.html' %}
+        {% include 'account/register_modal.html' %}
+    </div>
 {% endblock %}

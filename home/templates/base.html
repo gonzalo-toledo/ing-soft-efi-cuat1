@@ -1,6 +1,6 @@
 {% load static %}
 <!doctype html>
-<html lang="en">
+<html lang="es">
     <head>
         <title>{% block title %}{% endblock %}</title>
         <!-- Required meta tags -->
@@ -23,83 +23,10 @@
     </head>
     
     <body class="bg-light">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
-
-            <!-- <a class="navbar-brand fw-bold" href="{% url 'index' %}">
-                <img src="{% static 'img/logo_django.png' %}" class="logo-navbar" alt="">
-            </a> -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto"> <!-- Elementos a la izquierda -->
-                    <!-- {% if user.is_authenticated %} -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'index' %}">SkyWay</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'reserva_list' %}">Mis reservas</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'boleto_list' %}">Mis boletos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'vuelo_list' %}">Vuelos</a>
-                        </li>
-                        
-                        <!-- Sección Staff - Solo visible para usuarios staff -->
-                        {% if user.is_staff %}
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-warning fw-bold" href="#" id="staffDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-shield-check"></i> Panel Staff
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="staffDropdown">
-                                    <li><a class="dropdown-item" href="{% url 'vuelos_pasajeros_staff' %}">
-                                        <i class="bi bi-people"></i> Pasajeros por Vuelo
-                                    </a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="/admin/">
-                                        <i class="bi bi-gear"></i> Administración
-                                    </a></li>
-                                </ul>
-                            </li>
-                        {% endif %}
-                    <!-- {% endif %} -->
-                </ul>
-            
-                <ul class="navbar-nav ms-auto"> <!-- Elementos a la derecha -->
-                    {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <span class="navbar-text text-light me-3">
-                                <i class="bi bi-person-circle"></i> {{ user.username }}
-                                {% if user.is_staff %}<span class="badge bg-warning text-dark ms-1">Staff</span>{% endif %}
-                            </span>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-danger fw-bold" href="{% url 'logout' %}">Cerrar sesión</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar sesión</a>
-                        </li>
-                        <li>
-                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Registrate</a>
-                        </li>
-                        <!-- <li class="nav-item">
-                            <a class="nav-link" href="{% url 'register' %}">Registrate</a>
-                        </li> -->
-                    {% endif %}
-                </ul>
-            </div>
-
-            <div>
-                {% include 'account/login_modal.html' %}
-                {% include 'account/register_modal.html' %}
-            </div>
-        </nav>
-
+        <!-- Navbar -->
+        {% include 'navbar.html' %}
+        
+        <!-- Mensajes de alerta -->
         {% if messages %}
             {% for message in messages %}
                 {% if message.tags == 'error' %}
@@ -112,13 +39,18 @@
                 {% endif %}
             {% endfor %}
         {% endif %}
-    
-        <!-- Bootstrap Bundle JS (incluye Popper) -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
+        <!-- Contenido principal -->
         <div class="container-fluid mt-4">
             {% block content %}{% endblock %}
         </div>
+
+        <!-- Footer -->
+        {% include 'footer.html' %}
+
+
+        <!-- Bootstrap Bundle JS (incluye Popper) -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -129,6 +61,9 @@
 
         <!-- Tom Select JS -->
         <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+
+        <!-- Buscador JS -->
+        <script src="{% static 'js/buscador.js' %}"></script>
 
     </body>
 </html>

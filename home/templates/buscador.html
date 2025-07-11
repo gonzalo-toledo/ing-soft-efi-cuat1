@@ -1,0 +1,48 @@
+<div class="card search-card mb-5 shadow" style="margin-top: -100px; border-radius: 15px; z-index: 100; position: relative;">
+    <div class="card-body p-4">
+        <h4 class="card-title mb-4">Buscar Vuelos</h4>
+        <form action="{% url 'buscar_vuelos' %}" method="get" id="form-busqueda">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-5">
+                    <label for="origen" class="form-label">
+                        <i class="bi bi-geo-alt me-1 text-primary"></i>Origen
+                    </label>
+                    <select id="origen" name="origen" required>
+                        <option value="">Origen</option>
+                        {% for aeropuerto in aeropuertos %}
+                            <option value="{{ aeropuerto.iata }}">
+                                {{ aeropuerto.ciudad }}, {{ aeropuerto.pais }} ({{ aeropuerto.iata }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label for="destino" class="form-label">
+                        <i class="bi bi-geo-alt-fill me-1 text-primary"></i>Destino
+                    </label>
+                    <select id="destino" name="destino" required>
+                        <option value="">Destino</option>
+                        {% for aeropuerto in aeropuertos %}
+                            <option value="{{ aeropuerto.iata }}">
+                                {{ aeropuerto.ciudad }}, {{ aeropuerto.pais }} ({{ aeropuerto.iata }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="fecha" class="form-label">
+                        <i class="bi bi-calendar-event me-1 text-primary"></i>Fecha
+                    </label>
+                    <input type="date" class="form-control" id="fecha" name="fecha" required>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary px-4">
+                    <i class="bi bi-search me-2"></i>Buscar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

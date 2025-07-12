@@ -2,193 +2,39 @@
 {% block title %}Detalle del Vuelo{% endblock %}
 {% block content %}
 
-<style>
-    /* Incluyo los estilos limpios aquí para luego migrarlos a tu archivo CSS general */
-    
-    .vuelo-header {
-        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-        color: white;
-        padding: 2rem;
-        border-radius: 1rem 1rem 0 0;
-        text-align: center;
-    }
-
-    .vuelo-header h1 {
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .info-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-        margin-top: 1.5rem;
-    }
-
-    .info-item {
-        background-color: #f8f9fa;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        border-left: 4px solid #3498db;
-    }
-
-    .info-label {
-        font-weight: bold;
-        color: #34495e;
-    }
-
-    .info-value {
-        display: block;
-        color: #2c3e50;
-        margin-top: 0.25rem;
-    }
-
-    .stats-container {
-        display: flex;
-        gap: 1rem;
-        margin: 2rem 0;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .stat-card {
-        flex: 1 1 200px;
-        background: white;
-        padding: 1.5rem;
-        border-radius: 0.75rem;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-        text-align: center;
-        border-top: 4px solid #3498db;
-    }
-
-    .stat-number {
-        font-size: 2rem;
-        font-weight: bold;
-        color: #2c3e50;
-    }
-
-    .stat-label {
-        text-transform: uppercase;
-        font-size: 0.9rem;
-        color: #7f8c8d;
-    }
-
-    .legend {
-        display: flex;
-        justify-content: center;
-        gap: 2rem;
-        margin: 2rem 0;
-    }
-
-    .legend-item {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .legend-color {
-        width: 20px;
-        height: 20px;
-        border-radius: 4px;
-        border: 2px solid;
-    }
-
-    .legend-available .legend-color {
-        background-color: #d1ecf1;
-        border-color: #17a2b8;
-    }
-
-    .legend-occupied .legend-color {
-        background-color: #f8d7da;
-        border-color: #dc3545;
-    }
-
-    .seats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-        gap: 0.75rem;
-        justify-items: center;
-        margin: 2rem 0;
-    }
-
-    .seat {
-        padding: 0.5rem;
-        width: 70px;
-        height: 70px;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        font-size: 0.8rem;
-        text-align: center;
-        line-height: 1.2;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        transition: transform 0.2s;
-    }
-
-    .seat.available {
-        background-color: #d1ecf1;
-        border: 2px solid #17a2b8;
-        color: #0c5460;
-        cursor: pointer;
-    }
-
-    .seat.available:hover {
-        transform: scale(1.05);
-        box-shadow: 0 5px 15px rgba(23, 162, 184, 0.3);
-    }
-
-    .seat.occupied {
-        background-color: #f8d7da;
-        border: 2px solid #dc3545;
-        color: #721c24;
-        cursor: not-allowed;
-        opacity: 0.7;
-    }
-
-    .back-button {
-        margin-top: 2rem;
-        display: inline-block;
-        padding: 0.75rem 1.5rem;
-        background: #3498db;
-        color: white;
-        border-radius: 2rem;
-        text-decoration: none;
-        transition: background 0.3s;
-    }
-
-    .back-button:hover {
-        background: #21618c;
-    }
-
-</style>
-
 {% if user.is_authenticated %}
 
-<div class="vuelo-header">
-    <h1>Información del Vuelo</h1>
-    <p>{{ vuelo.origen.nombre }} → {{ vuelo.destino.nombre }}</p>
-</div>
+<div class="card shadow mt-4">
+            <div class="card-body d-flex flex-wrap align-items-center justify-content-evenly gap-3"> 
+                <div class="d-flex align-items-center flex-wrap gap-3">
+                    <h2>Información del Vuelo</h2>
+                </div>
+            </div>
+            <div class="card-body d-flex flex-wrap align-items-center justify-content-evenly gap-3">
+                <p class="">{{ vuelo.origen.nombre }} <i class="bi bi-arrow-right"></i> {{ vuelo.destino.nombre }}</p>
+            </div>
+            <div class="card-footer d-flex justify-content-around align-items-center"> 
+                <span>
+                    <div class="info-label">Salida</div>
+                    <span class="info-value">{{ vuelo.fecha_salida|date:"d/m/Y H:i" }}</span>
+                </span>
+                <span>
+                    <div class="info-label">Llegada</div>
+                    <span class="info-value">{{ vuelo.fecha_llegada|date:"d/m/Y H:i" }}</span>            
+                </span>
+                <span>
+                    <div class="info-label">Avión</div>
+                    <span class="info-value">{{ vuelo.avion.modelo }}</span>
+                </span>
+                <span>
+                    <div class="info-label">Precio</div>
+                    <span class="info-value">${{ vuelo.precio_base }}</span>
+                </span>
 
-<div class="info-grid">
-    <div class="info-item">
-        <div class="info-label">Salida</div>
-        <span class="info-value">{{ vuelo.fecha_salida|date:"d/m/Y H:i" }}</span>
-    </div>
-    <div class="info-item">
-        <div class="info-label">Llegada</div>
-        <span class="info-value">{{ vuelo.fecha_llegada|date:"d/m/Y H:i" }}</span>
-    </div>
-    <div class="info-item">
-        <div class="info-label">Avión</div>
-        <span class="info-value">{{ vuelo.avion.modelo }}</span>
-    </div>
-    <div class="info-item">
-        <div class="info-label">Precio</div>
-        <span class="info-value">${{ vuelo.precio_base }}</span>
-    </div>
-</div>
+
+            </div>
+
+        </div>
 
 <div class="stats-container">
     <div class="stat-card">
@@ -212,6 +58,12 @@
     <div class="legend-item legend-occupied">
         <span class="legend-color"></span> <span>Ocupado</span>
     </div>
+    <div>
+        P = Primera Clase
+    </div>
+    <div>
+        E = Económica
+    </div>
 </div>
 
 <div class="seats-grid">
@@ -231,7 +83,12 @@
     {% endfor %}
 </div>
 
-<a href="{% url 'vuelo_list' %}" class="back-button">← Volver a Vuelos</a>
+<!-- Enlaces -->
+<div class="card mt-4 border-0 shadow">
+    <div class="card-body d-flex flex-wrap gap-3 justify-content-start">
+        <a href="{% url 'vuelo_list' %}" class="btn btn-outline-primary btn-sm rounded-pill"><i class="bi bi-arrow-left"></i> Volver a Vuelos</a>
+    </div>
+</div>
 
 {% else %}
 <div class="container py-5">

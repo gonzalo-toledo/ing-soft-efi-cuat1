@@ -20,14 +20,14 @@ class VueloList(ListView):
         context = super().get_context_data(**kwargs)
         
         # Agregar información adicional para los filtros
-        vuelos = self.get_queryset()
+        # vuelos = self.get_queryset()
         
         # Obtener origenes y destinos únicos para los filtros
-        origenes_unicos = vuelos.values_list('origen__iata', 'origen__ciudad').distinct().order_by('origen__ciudad')
-        destinos_unicos = vuelos.values_list('destino__iata', 'destino__ciudad').distinct().order_by('destino__ciudad')
+        # origenes_unicos = vuelos.values_list('origen__iata', 'origen__ciudad').distinct().order_by('origen__ciudad')
+        # destinos_unicos = vuelos.values_list('destino__iata', 'destino__ciudad').distinct().order_by('destino__ciudad')
         
-        context['origenes_unicos'] = origenes_unicos
-        context['destinos_unicos'] = destinos_unicos
+        # context['origenes_unicos'] = origenes_unicos
+        # context['destinos_unicos'] = destinos_unicos
         
         return context
 
@@ -123,11 +123,11 @@ class BuscarVueloView(ListView):
         context['destinos_unicos'] = destinos_unicos
         
         # Agregar información de filtros activos
-        context['filtros_activos'] = {
-            'origen': self.request.GET.get('origen'),
-            'destino': self.request.GET.get('destino'),
-            'fecha': self.request.GET.get('fecha'),
-        }
+        # context['filtros_activos'] = {
+        #     'origen': self.request.GET.get('origen'),
+        #     'destino': self.request.GET.get('destino'),
+        #     'fecha': self.request.GET.get('fecha'),
+        # }
         
         return context
 

@@ -22,6 +22,11 @@
                             data-bs-target="#registerModal">
                             <i class="bi bi-person-plus me-2"></i>Registrarse
                         </button>
+                        <button class="btn btn-light btn-lg ms-3 px-4" type="button">
+                            <i class="bi bi-airplane me-2"></i>
+                            <a class="text-decoration-none text-dark " href="{% url 'vuelo_list' %}">Vuelos disponibles</a>
+
+                        </button>
                         {% endif %}
                     </div>
                 </div>
@@ -31,7 +36,7 @@
 
     <!-- Buscador de Vuelos -->
     <div class="container">
-        {% include 'buscador.html' %}
+        {% include 'buscador.html' with es_index=True %}
     </div>
 
     <!-- Features Section -->

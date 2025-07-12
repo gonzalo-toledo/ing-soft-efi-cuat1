@@ -1,4 +1,4 @@
-<div class="card search-card mb-5 shadow" style="margin-top: -100px; border-radius: 15px; z-index: 100; position: relative;">
+<div class="card search-card mb-5 shadow" style="{% if es_index %}margin-top: -100px; {% endif %} border-radius: 15px; z-index: 100; position: relative;">
     <div class="card-body p-4">
         <h4 class="card-title mb-4">Buscar Vuelos</h4>
         <form action="{% url 'buscar_vuelos' %}" method="get" id="form-busqueda">
@@ -39,9 +39,14 @@
             </div>
             
             <div class="mt-4">
-                <button type="submit" class="btn btn-primary px-4">
+                <button type="submit" class="btn btn-primary px-4 me-2">
                     <i class="bi bi-search me-2"></i>Buscar
                 </button>
+                {% if es_list %}
+                    <a href="{% url 'vuelo_list' %}" class="btn btn-outline-danger px-4">
+                        <i class="bi bi-trash3 me-2"></i>Limpiar filtros
+                    </a>
+            {% endif %}
             </div>
         </form>
     </div>

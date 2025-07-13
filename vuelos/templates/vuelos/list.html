@@ -5,7 +5,7 @@
 {% block content %}
 
     <!-- Buscador -->
-    {% include "buscador.html" with es_list=True %}
+    {% include "components/buscador.html" with es_list=True %}
 
     <!-- Filtros -->
     {% if request.GET.origen or request.GET.destino or request.GET.fecha %}
@@ -96,7 +96,7 @@
                                 </td>
                                 <td>
                                     <a href="{% url 'vuelo_detail' vuelo_id=vuelo.id %}" class="btn btn-primary btn-sm rounded-pill btn-table-list">
-                                        Ver Asientos
+                                        Elegir Asiento
                                     </a>
                                 </td>
                             </tr>

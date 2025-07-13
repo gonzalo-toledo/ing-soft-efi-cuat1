@@ -1,78 +1,41 @@
 {% extends "base.html" %}
 {% block title %}Crear Reserva{% endblock %}
 {% block content %}
-            <!-- Flight Details Card -->
-            <div class="card shadow border-0 rounded-4 mb-4">
-                <div class="card-header bg-light border-0 py-3">
-                    <h3 class="card-title mb-0 d-flex align-items-center gap-2">
-                        <span>📋</span>
-                        <span>Detalles de tu selección</span>
-                    </h3>
-                </div>
-                <div class="card-body p-4">
-                    <div class="row g-4">
-                        <!-- Route -->
-                        <div class="col-12">
-                            <div class="d-flex align-items-center justify-content-center gap-3 p-3 bg-light rounded-3">
-                                <div class="text-center">
-                                    <div class="fw-bold fs-5 text-primary">{{ vuelo.origen.iata }}</div>
-                                    <small class="text-muted">{{ vuelo.origen }}</small>
-                                </div>
-                                <div class="fs-3">✈️</div>
-                                <div class="text-center">
-                                    <div class="fw-bold fs-5 text-primary">{{ vuelo.destino.iata }}</div>
-                                    <small class="text-muted">{{ vuelo.destino }}</small>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Flight Info Grid -->
-                        <div class="col-md-6">
-                            <div class="d-flex align-items-center gap-3 p-3 border rounded-3">
-                                <div class="text-primary fs-4">🗓️</div>
-                                <div>
-                                    <div class="text-muted small">FECHA Y HORA</div>
-                                    <div class="fw-semibold">{{ vuelo.fecha_salida|date:"d/m/Y" }}</div>
-                                    <div class="text-primary">{{ vuelo.fecha_salida|date:"H:i" }}</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <div class="d-flex align-items-center gap-3 p-3 border rounded-3">
-                                <div class="text-primary fs-4">🛩️</div>
-                                <div>
-                                    <div class="text-muted small">AERONAVE</div>
-                                    <div class="fw-semibold">{{ vuelo.avion.modelo }}</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <div class="d-flex align-items-center gap-3 p-3 border rounded-3">
-                                <div class="text-primary fs-4">💺</div>
-                                <div>
-                                    <div class="text-muted small">ASIENTO SELECCIONADO</div>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="fw-semibold">{{ asiento.numero }}</span>
-                                        <span class="seat-visual">{{ asiento.clase }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <div class="d-flex align-items-center gap-3 p-3 border rounded-3">
-                                <div class="text-success fs-4">💰</div>
-                                <div>
-                                    <div class="text-muted small">PRECIO</div>
-                                    <div class="price-highlight">${{ vuelo.precio_base }}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
+    <div class="card shadow mt-4">
+        <div class="card-body d-flex flex-wrap align-items-center justify-content-evenly gap-3"> 
+            <div class="d-flex align-items-center flex-wrap gap-3">
+                <h2>Crear Reserva de vuelo</h2>
             </div>
+        </div>
+        <div class="card-body d-flex flex-wrap align-items-center justify-content-evenly gap-3">
+            <p class="">{{ vuelo.origen.nombre }} <i class="bi bi-arrow-right"></i> {{ vuelo.destino.nombre }}</p>
+        </div>
+        <div class="card-footer d-flex justify-content-around align-items-center">
+            <div>
+                <div class="info-label">Salida</div>
+                <span class="info-value">{{ vuelo.fecha_salida|date:"d/m/Y H:i" }}</span>
+            </div>
+            <div>
+                <div class="info-label">Llegada</div>
+                <span class="info-value">{{ vuelo.fecha_llegada|date:"d/m/Y H:i" }}</span>            
+            </div>
+            <div>
+                <div class="info-label">Avión</div>
+                <span class="info-value">{{ vuelo.avion.modelo }}</span>
+            </div>
+            <div>
+                <div class="info-label">Precio</div>
+                <span class="info-value">${{ vuelo.precio_base }}</span>
+            </div>
+            <div>
+                <div class="info-label">Asiento</div>
+                <span class="info-value">{{ asiento.numero }}</span>
+            </div>
+        </div>
+    </div>
+
+    ✈️🗓️<🛩️<💺
             
             <!-- Form Card -->
             <div class="card form-card shadow border-0 rounded-4 mb-4">
@@ -108,15 +71,17 @@
                         
                         <!-- Action Buttons -->
                         <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
-                            <button type="submit" class="btn btn-success btn-lg rounded-pill px-4 d-flex align-items-center justify-content-center gap-2">
-                                <span>✈️</span>
-                                <span>Confirmar Reserva</span>
-                            </button>
                             <a href="{% url 'vuelo_detail' vuelo_id=vuelo.id %}" 
-                               class="btn btn-outline-secondary btn-lg rounded-pill px-4 d-flex align-items-center justify-content-center gap-2">
+                            class="btn btn-outline-secondary btn-sm rounded-pill d-flex align-items-center justify-content-start gap-2">
                                 <span>←</span>
                                 <span>Volver al Vuelo</span>
                             </a>
+                            
+                            <button type="submit" class="btn btn-success btn-sm rounded-pill d-flex align-items-center justify-content-center gap-2">
+                                <span>✈️</span>
+                                <span>Confirmar Reserva</span>
+                            </button>
+
                         </div>
                     </form>
                 </div>

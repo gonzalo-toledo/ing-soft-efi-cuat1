@@ -17,6 +17,10 @@
                         Gestiona tus vuelos con una plataforma moderna e intuitiva. Descubre nuevos destinos con nuestro servicio premium.
                     </p>
                     <div>
+                        <button class="btn btn-light btn-lg ms-3 px-4" type="button">
+                            <i class="bi bi-airplane me-2"></i>
+                            <a class="text-decoration-none text-dark me-2" href="{% url 'vuelo_list' %}">Vuelos disponibles</a>
+                        </button>
                         {% if not user.is_authenticated %}
                         <button class="btn btn-outline-light btn-lg ms-3 px-4" type="button" data-bs-toggle="modal"
                             data-bs-target="#registerModal">
@@ -29,56 +33,9 @@
         </div>
     </div>
 
-    <!-- Flight Search Card (Floating above content) -->
+    <!-- Buscador de Vuelos -->
     <div class="container">
-        <div class="card search-card mb-5 shadow" style="margin-top: -100px; border-radius: 15px; z-index: 100; position: relative;">
-            <div class="card-body p-4">
-                <h4 class="card-title mb-4">Buscar Vuelos</h4>
-                <form action="{% url 'buscar_vuelos' %}" method="get" id="form-busqueda">
-                    {% csrf_token %}
-                    <div class="row g-3">
-                        <div class="col-md-5">
-                            <label for="origen" class="form-label">
-                                <i class="bi bi-geo-alt me-1 text-primary"></i>Origen
-                            </label>
-                            <select id="origen" name="origen" required>
-                                <option value="">Origen</option>
-                                {% for aeropuerto in aeropuertos %}
-                                    <option value="{{ aeropuerto.iata }}">
-                                        {{ aeropuerto.ciudad }}, {{ aeropuerto.pais }} ({{ aeropuerto.iata }})
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-md-5">
-                            <label for="destino" class="form-label">
-                                <i class="bi bi-geo-alt-fill me-1 text-primary"></i>Destino
-                            </label>
-                            <select id="destino" name="destino" required>
-                                <option value="">Seleccionar destino</option>
-                                {% for aeropuerto in aeropuertos %}
-                                    <option value="{{ aeropuerto.iata }}">
-                                        {{ aeropuerto.ciudad }}, {{ aeropuerto.pais }} ({{ aeropuerto.iata }})
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <label for="fecha" class="form-label">
-                                <i class="bi bi-calendar-event me-1 text-primary"></i>Fecha
-                            </label>
-                            <input type="date" class="form-control" id="fecha" name="fecha" required>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-4">
-                        <button type="submit" class="btn btn-primary px-4">
-                            <i class="bi bi-search me-2"></i>Buscar Vuelos
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+        {% include 'components/buscador.html' with es_index=True %}
     </div>
 
     <!-- Features Section -->
@@ -267,122 +224,5 @@
             </div>
         </div>
     </div>
-
-    <!-- CSS for Feature Cards -->
-    <style>
-        .feature-icon {
-            width: 70px;
-            height: 70px;
-            background-color: rgba(0, 0, 0, 0.288);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.75rem;
-            color: white;
-            transition: all 0.3s ease;
-            
-        }
-        
-        .feature-card {
-            transition: all 0.3s ease;
-            border-radius: 12px;
-
-        }
-        
-        .feature-card .card-title,
-        .feature-card .card-text {
-            color: white;
-            opacity: 0.8;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-        }
-        
-        .feature-card:hover .feature-icon {
-            opacity: 1;
-            background-color: rgba(0, 0, 0, 0.5);
-            transform: scale(1.03);
-        }
-        
-        .feature-card:hover .card-title,
-        .feature-card:hover .card-text {
-            opacity: 1;
-        }
-
-        .search-card {
-            background-color: white;
-        }
-        
-        @media (max-width: 768px) {
-            .search-card {
-                margin-top: 0 !important;
-            }
-        }
-    </style>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Set default date to tomorrow
-            const fechaInput = document.getElementById('fecha');
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            fechaInput.value = tomorrow.toISOString().split('T')[0];
-
-            // Tom Select para origen
-            new TomSelect('#origen', {
-                create: false,
-                highlight: true,
-                maxOptions: 10,
-                loadingClass: 'is-loading',
-                score: function (search) {
-                    return function (item) {
-                        return item.text.toLowerCase().includes(search.toLowerCase()) ? 1 : 0;
-                    };
-                }
-            });
-
-            // Tom Select para destino
-            new TomSelect('#destino', {
-                create: false,
-                highlight: true,
-                maxOptions: 10,
-                loadingClass: 'is-loading',
-                score: function (search) {
-                    return function (item) {
-                        return item.text.toLowerCase().includes(search.toLowerCase()) ? 1 : 0;
-                    };
-                }
-            });
-
-            // Validación visual rápida (opcional, para mejorar UX)
-            const form = document.getElementById('form-busqueda');
-            form.addEventListener('submit', function (e) {
-                const origen = document.getElementById('origen').value;
-                const destino = document.getElementById('destino').value;
-                const fecha = fechaInput.value;
-                const hoy = new Date().toISOString().split('T')[0];
-
-                if (origen === destino && origen !== '') {
-                    alert("El origen y destino no pueden ser iguales.");
-                    // No cancelamos el envío, dejamos que el backend maneje también.
-                    //para cancelar el envio:
-                    //e.preventDefault();
-                    //return
-                }
-
-                if (fecha < hoy) {
-                    alert("La fecha no puede ser anterior a hoy.");
-                    // No cancelamos el envío, dejamos que el backend maneje también
-                    //para cancelar el envio:
-                    //e.preventDefault();
-                    //return
-
-
-                }
-            });
-        });
-    </script>
 
 {% endblock %}

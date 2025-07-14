@@ -16,8 +16,14 @@ class ReservaListView(ListView):
     context_object_name = 'reservas'
     
     def get_queryset(self):
-        return Reserva.objects.select_related('pasajero', 'vuelo', 'asiento').order_by('-fecha_reserva')
-
+        reservas = Reserva.objects.select_related('pasajero__usuario', 'vuelo', 'asiento').order_by('-fecha_reserva')
+        # Filtrar reservas por el usuario actual
+        if self.request.user.is_authenticated:
+            reservas = reservas.filter(pasajero__usuario=self.request.user)
+        else:
+            messages.error(self.request, "Debe iniciar sesión para ver sus reservas.")
+            return Reserva.objects.none()
+        return reservas
 
 class ReservaDetailView(DetailView):
     model = Reserva
@@ -158,6 +164,7 @@ class ReservaCancelView(DeleteView):
         messages.success(request, "Reserva y boleto cancelados correctamente.")
         return redirect(self.success_url)
 
+
 # ==== BOLETOS ====
 
 class BoletoListView(ListView):
@@ -166,7 +173,15 @@ class BoletoListView(ListView):
     context_object_name = 'boletos'
     
     def get_queryset(self):
-        return Boleto.objects.select_related('reserva__pasajero', 'reserva__vuelo', 'reserva__asiento').order_by('-fecha_emision')
+        boletos = Boleto.objects.select_related('reserva__pasajero', 'reserva__vuelo', 'reserva__asiento').order_by('-fecha_emision')
+        # Filtrar boletos por el usuario actual
+        if self.request.user.is_authenticated:
+            boletos = boletos.filter(reserva__pasajero__usuario=self.request.user)
+        else:
+            messages.error(self.request, "Debe iniciar sesión para ver sus boletos.")
+            return Boleto.objects.none()
+        return boletos
+    
     
 class BoletoDetailView(DetailView):
     model = Boleto

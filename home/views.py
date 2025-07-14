@@ -76,13 +76,14 @@ class RegisterView(View):
 
 class LoginView(View):
     def get(self, request):
-        # No mostramos la página independiente, redirigimos a la principal
         return redirect('index')
-        #si no quiero que redirija a index y que abra el modal de login, descomentar la siguiente línea
+        # Para permitir renderización directa del login:
         # return render(request, 'account/login.html', {'form': LoginForm()})
 
     def post(self, request):
         form = LoginForm(request.POST)
+        next_url = request.POST.get('next') or request.META.get('HTTP_REFERER') or 'index'
+
         if form.is_valid():
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
@@ -90,14 +91,14 @@ class LoginView(View):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('index')
+                return redirect(next_url)
             else:
                 messages.error(request, "Usuario o contraseña incorrectos")
         else:
             messages.error(request, "Formulario inválido")
 
-        # Redirigimos a index para mostrar el modal con errores
-        return redirect('index')
+        # Redirigimos a la página anterior (o index si no hay otra)
+        return redirect(next_url)
 
 
 class LogoutView(View):

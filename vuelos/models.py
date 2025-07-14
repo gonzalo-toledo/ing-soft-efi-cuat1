@@ -15,7 +15,7 @@ class Aeropuerto(models.Model):
     tipo = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"{self.iata} - {self.nombre}"
+        return f"{self.iata} - {self.nombre} - {self.ciudad}, {self.provincia}, {self.pais}"
     
 class Vuelo(models.Model):
     avion = models.ForeignKey(Avion, on_delete=models.CASCADE)

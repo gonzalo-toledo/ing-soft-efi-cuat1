@@ -11,6 +11,11 @@
     <p><strong>Asiento:</strong> {{ reserva.asiento }}</p>
     <p><strong>Estado:</strong> {{ reserva.estado }}</p>
     <p><strong>Fecha:</strong> {{ reserva.fecha_reserva }}</p>
+
+    {% if reserva.estado != 'Confirmada' %}
+      <a class="btn btn-success" href="{% url 'reserva_confirmar_pago' reserva.id %}">Confirmar Pago</a>
+    {% endif %}
+
     <a class="btn btn-outline-danger" href="{% url 'reserva_cancelar' reserva.id %}">Cancelar</a>
     <a class="btn btn-secondary" href="{% url 'reserva_list' %}">Volver</a>
   </div>

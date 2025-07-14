@@ -7,6 +7,7 @@ from reservas.views import (
     ReservaCreateView,
     ReservaDetailView,
     ReservaListView,
+    ReservaConfirmarPagoView,
 )
 
 urlpatterns = [
@@ -25,6 +26,11 @@ urlpatterns = [
         "crear/<int:vuelo_id>/<int:asiento_id>/",
         ReservaCreateView.as_view(),
         name="reserva_create"
+    ),
+    path(
+        "<int:reserva_id>/confirmar_pago/",
+        ReservaConfirmarPagoView.as_view(),
+        name="reserva_confirmar_pago"
     ),
     path(
         "<int:reserva_id>/cancelar/",

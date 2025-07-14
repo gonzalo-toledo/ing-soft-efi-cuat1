@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DeleteView, DetailView, ListView
-from django.shortcuts import get_object_or_404, redirect
+from django.views.generic import CreateView, DetailView, ListView, View
+from django.shortcuts import get_object_or_404, redirect, render
 from reservas.models import Reserva, Boleto
 from reservas.forms import ReservaForm
 from vuelos.models import Vuelo
@@ -130,31 +130,45 @@ class ReservaCreateView(CreateView):
             )
             return redirect('vuelo_detail', vuelo_id=self.vuelo.id)        
         self.object = form.save(commit=False)
-        self.object.estado = 'Confirmada'
         self.object.save()
-
-        # Crear boleto automáticamente
-        self.object.generar_boleto()
 
         messages.success(
             self.request, 
-            f"Reserva y boleto creados exitosamente para el vuelo {self.vuelo.origen} → "
+            f"Reserva creada exitosamente para el vuelo {self.vuelo.origen} → "
             f"{self.vuelo.destino} en el asiento {self.asiento.numero}."
         )
         return redirect(self.success_url)
     
-class ReservaCancelView(DeleteView):
-    model = Reserva
-    template_name = 'reservas/cancel.html'
-    pk_url_kwarg = 'reserva_id'
-    success_url = reverse_lazy('reserva_list')
+    
+class ReservaConfirmarPagoView(View):
+    def get(self, request, reserva_id):
+        reserva = get_object_or_404(Reserva, id=reserva_id)
+        return render(request, 'reservas/confirmar_pago.html', {'reserva': reserva})
 
-    def delete(self, request, *args, **kwargs):
-        reserva = self.get_object()
+    def post(self, request, reserva_id):
+        reserva = get_object_or_404(Reserva, id=reserva_id)
+
+        if reserva.estado != 'Confirmada':
+            reserva.estado = 'Confirmada'
+            reserva.save()
+            reserva.generar_boleto()
+            messages.success(request, "Pago confirmado y boleto generado correctamente.")
+        else:
+            messages.info(request, "La reserva ya estaba confirmada.")
+
+        return redirect(reverse_lazy('reserva_detail', kwargs={'reserva_id': reserva.id}))
+
+    
+class ReservaCancelView(View):
+    def get(self, request, *args, **kwargs):
+        reserva = get_object_or_404(Reserva, pk=kwargs['reserva_id'])
+        return render(request, 'reservas/cancel.html', {'reserva': reserva})
+
+    def post(self, request, *args, **kwargs):
+        reserva = get_object_or_404(Reserva, pk=kwargs['reserva_id'])
         reserva.estado = 'Cancelada'
         reserva.save()
 
-        # Anular boleto si existe
         try:
             boleto = Boleto.objects.get(reserva=reserva)
             boleto.estado = 'Anulado'
@@ -163,7 +177,7 @@ class ReservaCancelView(DeleteView):
             pass
 
         messages.success(request, "Reserva y boleto cancelados correctamente.")
-        return redirect(self.success_url)
+        return redirect(reverse_lazy('reserva_list'))
 
 
 # ==== BOLETOS ====

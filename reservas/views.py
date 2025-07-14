@@ -164,6 +164,7 @@ class ReservaCancelView(DeleteView):
         messages.success(request, "Reserva y boleto cancelados correctamente.")
         return redirect(self.success_url)
 
+
 # ==== BOLETOS ====
 
 class BoletoListView(ListView):

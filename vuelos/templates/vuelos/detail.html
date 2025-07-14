@@ -4,7 +4,7 @@
 
 {% if user.is_authenticated %}
 
-    <div class="card shadow mt-4">
+    <div class="card shadow my-4">
         <div class="card-body d-flex flex-wrap align-items-center justify-content-evenly gap-3"> 
             <div class="d-flex align-items-center flex-wrap gap-3">
                 <h2>Información del Vuelo</h2>
@@ -83,13 +83,14 @@
     <!-- Enlaces -->
     <div class="card mt-4 border-0 shadow">
         <div class="card-body d-flex flex-wrap gap-3 justify-content-start">
-            <a href="{% url 'vuelo_list' %}" class="btn btn-outline-primary btn-sm rounded-pill"><i class="bi bi-arrow-left"></i> Volver a Vuelos</a>
+            <a href="{% url 'vuelo_list' %}" class="btn btn-outline-primary btn-md rounded-pill"><i class="bi bi-arrow-left"></i> Volver a Vuelos</a>
         </div>
     </div>
 
 {% else %}
     <div class="container py-5">
         <div class="text-center">
+            <p class="display-4">🚫</p>
             <h2>Acceso Denegado</h2>
             <p>Por favor, inicia sesión para ver los detalles del vuelo.</p>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">

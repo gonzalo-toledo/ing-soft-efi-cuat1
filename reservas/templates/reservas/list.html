@@ -1,113 +1,114 @@
 {% extends 'base.html' %}
 {% block title %}Listado de Reservas{% endblock %}
 {% block content %}
-            {% if reservas %}
-                <!-- reservas Grid -->
-                <div class="row g-4">
-                    {% for reserva in reservas %}
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <a href="{% url 'reserva_detail' reserva.id %}" class="text-decoration-none">
-                            <div class="card ticket-card h-100 border-0 shadow">
-                                <!-- Reserva Header -->
-                                <div class="card-header bg-light border-0 d-flex justify-content-between align-items-center">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="fs-5">🎫</span>
-                                        <span class="fw-semibold text-dark">Reserva</span>
-                                    </div>
-                                    {% if reserva.estado == 'Confirmada' %}
-                                        <span class="badge bg-success">{{ reserva.estado }}</span>
-                                    {% elif reserva.estado == 'Pendiente' %}
-                                        <span class="badge bg-primary">{{ reserva.estado }}</span>
-                                    {% elif reserva.estado == 'Cancelada' %}
-                                        <span class="badge bg-danger">{{ reserva.estado }}</span>
-                                    {% else %}
-                                        <span class="badge bg-secondary">{{ reserva.estado }}</span>
-                                    {% endif %}
-                                </div>
-                                
-                                <!-- Reserva Body -->
-                                <div class="card-body">
-                                    <!-- Passenger Info -->
-                                    <div class="d-flex align-items-center gap-2 mb-3">
-                                        <span class="text-primary">👤</span>
-                                        <div>
-                                            <div class="text-muted small">PASAJERO</div>
-                                            <div class="fw-semibold text-dark">{{ reserva.pasajero }}</div>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Emission Date -->
-                                    <div class="d-flex align-items-center gap-2 mb-3">
-                                        <span class="text-primary">📅</span>
-                                        <div>
-                                            <div class="text-muted small">FECHA DE RESERVA</div>
-                                            <div class="fw-semibold text-dark">{{ reserva.fecha_reserva|date:"d/m/Y H:i" }}</div>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Reservation Info -->
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="text-primary">📋</span>
-                                        <div>
-                                            <div class="text-muted small">VUELO</div>
-                                            <div class="fw-semibold text-dark">
-                                                {{ reserva.vuelo.origen.ciudad }} - {{ reserva.vuelo.destino.ciudad }}<br>
-                                                
-                                            <div class="text-muted small">FECHA DE VUELO</div>
-                                            <div class="fw-semibold text-dark">SALIDA: {{ reserva.vuelo.fecha_salida|date:"d/m/Y" }} -- LLEGADA: {{ reserva.vuelo.fecha_llegada|date:"d/m/Y" }}</div>
-                                            </div>
-                                            
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Reserva Footer -->
-                                <div class="card-footer bg-transparent border-0 text-center">
-                                    <small class="text-muted">Toca para ver detalles completos</small>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    {% endfor %}
-                </div>
-                
-                <!-- Summary Stats -->
-                <div class="card mt-5 border-0 shadow">
-                    <div class="card-body text-center">
-                        <div class="row">
-                            <div class="col-12 col-md-4 mb-3 mb-md-0">
-                                <div class="display-6 fw-bold text-primary">{{ reservas|length }}</div>
-                                <div class="text-muted">Total de Reservas</div>
-                            </div>
-                            <div class="col-12 col-md-4 mb-3 mb-md-0">
-                                <div class="display-6 fw-bold text-success">🎫</div>
-                                <div class="text-muted">Sistema Digital</div>
-                            </div>
-                            <div class="col-12 col-md-4">
-                                <div class="display-6 fw-bold text-info">📱</div>
-                                <div class="text-muted">Acceso Móvil</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-            {% else %}
-                <!-- No Reservas Available -->
-                <div class="card border-0 shadow text-center">
-                    <div class="card-body py-5">
-                        <div class="display-1 mb-3">🎫</div>
-                        <h3 class="text-muted mb-3">No hay reservas registrados</h3>
-                        <p class="text-muted">Aún no tienes reservas emitidos. Los reservas aparecerán aquí una vez que confirmes tus reservas.</p>
-                        <div class="mt-4">
-                            <a href="{% url 'vuelo_list' %}" class="btn btn-primary btn-lg rounded-pill px-4">
-                                ✈️ Ver Vuelos Disponibles
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
+
+{% if reservas %}
+    <div class="card shadow my-4">
+        <div class="card-body d-flex flex-wrap align-items-center justify-content-evenly gap-3"> 
+            <div class="d-flex align-items-center flex-wrap gap-3">
+                <h2>Listado de reservas de {{ user.username }}</h2>
+            </div>
+        </div>
+        <div class="card-body text-center gap-3">
+            <div class="display-6 fw-bold text-primary">{{ reservas|length }}</div>
+            <div class="text-muted">Total de Reservas</div>
+        </div>
+        <div class="card-footer d-flex justify-content-around align-items-center">
+            <!-- Acá van las reservas por pasajero del usuario FALTA CREAR LA VIEW-->
         </div>
     </div>
-</div>
+
+    <!-- reservas Grid -->
+    <div class="row g-4">
+        {% for reserva in reservas %}
+            <div class="col-12 col-md-6 col-lg-4">
+                <a href="{% url 'reserva_detail' reserva.id %}" class="text-decoration-none">
+                    <div class="card ticket-card h-100 border-0 shadow">
+                        <!-- Reserva Header -->
+                        <div class="card-header bg-light border-0 d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="fs-5">🎫</span>
+                                <span class="fw-semibold text-dark">Reserva</span>
+                            </div>
+                            {% if reserva.estado == 'Confirmada' %}
+                                <span class="badge bg-success">{{ reserva.estado }}</span>
+                            {% elif reserva.estado == 'Pendiente' %}
+                                <span class="badge bg-primary">{{ reserva.estado }}</span>
+                            {% elif reserva.estado == 'Cancelada' %}
+                                <span class="badge bg-danger">{{ reserva.estado }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ reserva.estado }}</span>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Reserva Body -->
+                        <div class="card-body">
+                            <!-- Passenger Info -->
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <span class="text-primary">👤</span>
+                                <div>
+                                    <div class="text-muted small">PASAJERO</div>
+                                    <div class="fw-semibold text-dark">{{ reserva.pasajero }}</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Emission Date -->
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <span class="text-primary">📅</span>
+                                <div>
+                                    <div class="text-muted small">FECHA DE RESERVA</div>
+                                    <div class="fw-semibold text-dark">{{ reserva.fecha_reserva|date:"d/m/Y H:i" }}</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Reservation Info -->
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="text-primary">📋</span>
+                                <div>
+                                    <div class="text-muted small">VUELO</div>
+                                    <div class="fw-semibold text-dark">
+                                        {{ reserva.vuelo.origen.ciudad }} - {{ reserva.vuelo.destino.ciudad }}<br>
+                                        
+                                    <div class="text-muted small">FECHA DE VUELO</div>
+                                    <div class="fw-semibold text-dark">SALIDA: {{ reserva.vuelo.fecha_salida|date:"d/m/Y" }} -- LLEGADA: {{ reserva.vuelo.fecha_llegada|date:"d/m/Y" }}</div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Reserva Footer -->
+                        <div class="card-footer bg-transparent border-0 text-center">
+                            <small class="text-muted">Toca para ver detalles completos</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Enlaces -->
+    <div class="card mt-4 border-0 shadow">
+        <div class="card-body d-flex flex-wrap gap-3 justify-content-between">
+            <a href="{% url 'vuelo_list' %}" class="btn btn-outline-primary btn-md rounded-pill"><i class="bi bi-arrow-left"></i> Volver a Vuelos</a>
+            <a href="{% url 'boleto_list' %}" class="btn btn-outline-success btn-md rounded-pill">🎫 Ver Boletos</a>
+        </div>
+    </div>
+|
+{% else %}
+    <!-- No Reservas Available -->
+    <div class="card border-0 shadow text-center">
+        <div class="card-body py-5">
+            <div class="display-1 mb-3">🎫</div>
+            <h3 class="text-muted mb-3">No hay reservas registrados</h3>
+            <p class="text-muted">Aún no tienes reservas emitidos. Los reservas aparecerán aquí una vez que confirmes tus reservas.</p>
+            <div class="mt-4">
+                <a href="{% url 'vuelo_list' %}" class="btn btn-primary btn-lg rounded-pill px-4">
+                    ✈️ Ver Vuelos Disponibles
+                </a>
+            </div>
+        </div>
+    </div>
+{% endif %}
 
 {% endblock %}

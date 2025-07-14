@@ -25,7 +25,7 @@ urlpatterns = [
     path('vuelos/', include('vuelos.urls')),    
     # path('aviones/', include('aviones.urls')),
     path('reservas/', include('reservas.urls')),
-    # path('pasajeros/', include('pasajeros.urls')),
+    path('pasajeros/', include('pasajeros.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

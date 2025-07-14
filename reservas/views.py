@@ -6,7 +6,7 @@ from reservas.models import Reserva, Boleto
 from reservas.forms import ReservaForm
 from vuelos.models import Vuelo
 from aviones.models import Asiento
-from pasajeros.models import Pasajero
+from pasajeros.forms import PasajeroForm
 
 # ==== RESERVAS ====
 
@@ -90,6 +90,7 @@ class ReservaCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         context['vuelo'] = self.vuelo
         context['asiento'] = self.asiento
+        context['pasajero_form'] = PasajeroForm()
         return context
 
     def get_form_kwargs(self):

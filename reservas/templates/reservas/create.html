@@ -67,9 +67,9 @@
                     </div>
                 {% endif %}
 
-                <a href="" class="btn btn-success btn-sm rounded-pill mt-3"> 
+                <button type="button" class="btn btn-success btn-sm rounded-pill mt-3" data-bs-toggle="modal" data-bs-target="#crearPasajeroModal">
                     <i class="bi bi-plus-circle me-2"></i>Crear nuevo pasajero
-                </a>
+                </button>
             </div>
             
             <!-- Action Buttons -->
@@ -100,6 +100,8 @@
         </div>
     </div>
 </div>
+
+{% include "pasajeros/pasajero_create.html" with request=request %}
 
 
 {% endblock %}

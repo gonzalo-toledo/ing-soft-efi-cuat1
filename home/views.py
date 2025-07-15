@@ -23,6 +23,7 @@ class RegisterView(View):
         )
     def post(self, request):
         form = RegisterForm(request.POST)
+        next_url = request.POST.get('next') or request.META.get('HTTP_REFERER') or 'index'
         if form.is_valid():
             User.objects.create_user(    
                 username = form.cleaned_data.get('username'),
@@ -30,7 +31,7 @@ class RegisterView(View):
                 email = form.cleaned_data.get('email'),
             )
             messages.success(request, 'Usuario registrado correctamente')
-            return redirect('index')
+            return redirect(next_url)
         else:
             # Este bloque toma los errores del formulario y los agrega al sistema de mensajes
             for field, errors in form.errors.items():

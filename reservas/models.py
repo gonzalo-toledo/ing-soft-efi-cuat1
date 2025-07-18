@@ -21,6 +21,7 @@ class Reserva(models.Model):
         ], 
         default='Pendiente'
     )
+    activa = models.BooleanField(default=True)
 
     def clean(self):
         if self.asiento.avion != self.vuelo.avion:
@@ -39,10 +40,7 @@ class Reserva(models.Model):
         )
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['vuelo', 'asiento'], name='unique_reserva_por_vuelo_y_asiento'),
-            models.UniqueConstraint(fields=['pasajero', 'vuelo'], name='unique_reserva_por_pasajero_y_vuelo')
-        ]
+        constraints = []
 
 class Boleto(models.Model):
     reserva = models.ForeignKey(Reserva, on_delete=models.CASCADE)

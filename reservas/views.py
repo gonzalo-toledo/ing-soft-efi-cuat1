@@ -70,10 +70,12 @@ class ReservaCreateView(CreateView):
         
         # Validar que el asiento no esté ocupado
         reserva_existente = Reserva.objects.filter(
-            vuelo=self.vuelo, 
+            vuelo=self.vuelo,
             asiento=self.asiento,
+            activa=True,
             estado__in=['Confirmada', 'Pendiente']
         ).exists()
+
         
         if reserva_existente:
             messages.error(request, "Este asiento ya está reservado.")
@@ -120,8 +122,10 @@ class ReservaCreateView(CreateView):
         reserva_existente = Reserva.objects.filter(
             vuelo=self.vuelo,
             pasajero=pasajero,
+            activa=True,
             estado__in=['Confirmada', 'Pendiente']
         ).exists()
+
 
         if reserva_existente:
             messages.error(
@@ -130,6 +134,7 @@ class ReservaCreateView(CreateView):
             )
             return redirect('vuelo_detail', vuelo_id=self.vuelo.id)        
         self.object = form.save(commit=False)
+        self.object.activa = True
         self.object.save()
 
         messages.success(
@@ -167,6 +172,7 @@ class ReservaCancelView(View):
     def post(self, request, *args, **kwargs):
         reserva = get_object_or_404(Reserva, pk=kwargs['reserva_id'])
         reserva.estado = 'Cancelada'
+        reserva.activa = False
         reserva.save()
 
         try:

@@ -6,6 +6,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 # Create your views here.
 
+class PerfilView(View):
+    def get(self, request):
+        return render(
+            request, 
+            'account/perfil.html'
+        )
+
 class HomeView(View):
     def get(self, request):
         return render(
@@ -39,41 +46,7 @@ class RegisterView(View):
                     messages.error(request, f"{form.fields[field].label}: {error}" if field in form.fields else error)
 
             return render(request, 'account/register.html', {'form': form})
-            
-# class LoginView(View):
-#     def get(self, request):
-#         form = LoginForm()
-#         return render(
-#             request,
-#             'account/login.html',
-#             {'form': form}
-#         )
-    
-#     def post(self, request):
-#         form = LoginForm(request.POST)
-#         if form.is_valid():
-#             username = form.cleaned_data.get('username')
-#             password = form.cleaned_data.get('password')
-            
-#             user = authenticate ( 
-#                 request,
-#                 username = username,
-#                 password = password
-#             )
-#             if user is not None:
-#                 login(request, user)
-#                 return redirect('index')
-#             else:
-#                 messages.error(request, 'Usuario o contrase')
-#                 return redirect('login')
-#         else:
-#             # Este bloque toma los errores del formulario y los agrega al sistema de mensajes
-#             for field, errors in form.errors.items():
-#                 for error in errors:
-#                     messages.error(request, f"{form.fields[field].label}: {error}" if field in form.fields else error)
-
-#             return render(request, 'account/login.html', {'form': form})
-        
+              
 
 class LoginView(View):
     def get(self, request):

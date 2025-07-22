@@ -5,6 +5,16 @@ class PasajeroForm(forms.ModelForm):
     class Meta:
         model = Pasajero
         exclude = ['usuario']
+        labels = {
+            'fecha_nacimiento': 'Fecha de Nacimiento',
+            'nombre': 'Nombre',
+            'apellido': 'Apellido',
+            'pasaporte': 'Documento de Identidad',
+            'nacionalidad': 'Nacionalidad',
+            'genero': 'Genero',
+            'email': 'Correo Electronico',
+            'telefono': 'Telefono',
+        }
         widgets = {
             'fecha_nacimiento': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),

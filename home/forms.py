@@ -8,7 +8,7 @@ class RegisterForm(forms.Form):
         label='Nombre de usuario',
         widget=forms.TextInput(
             attrs={'class': 'form-control',
-                'placeholder': 'Ingrese su nombre de usuario'
+                'placeholder': 'Nombre de usuario'
             }
         )
     )
@@ -17,7 +17,7 @@ class RegisterForm(forms.Form):
         label='Contraseña',
         widget=forms.PasswordInput(
             attrs={'class': 'form-control',
-                'placeholder': 'Ingrese su contraseña'
+                'placeholder': 'Contraseña'
             }
         )
     )
@@ -26,7 +26,7 @@ class RegisterForm(forms.Form):
         label='Confirmar Contraseña',
         widget=forms.PasswordInput(
             attrs={'class': 'form-control',
-                'placeholder': 'Confirme su contraseña'
+                'placeholder': 'Confirmar contraseña'
             }
         )
     )
@@ -35,7 +35,7 @@ class RegisterForm(forms.Form):
         label='Correo Electrónico',
         widget=forms.EmailInput(
             attrs={'class': 'form-control',
-                'placeholder': 'Ingrese su correo electrónico'
+                'placeholder': 'Correo electrónico'
             }
         )
     )
@@ -80,7 +80,7 @@ class LoginForm(forms.Form):
         label='Nombre de usuario',
         widget=forms.TextInput(
             attrs={'class': 'form-control',
-                'placeholder': 'Ingrese su nombre de usuario'
+                'placeholder': 'Nombre de usuario'
             }
         )
     )
@@ -90,7 +90,7 @@ class LoginForm(forms.Form):
         label='Contraseña',
         widget=forms.PasswordInput(
             attrs={'class': 'form-control',
-                'placeholder': 'Ingrese su contraseña'
+                'placeholder': 'Contraseña'
             }
         )
     )

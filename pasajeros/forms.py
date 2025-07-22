@@ -11,9 +11,9 @@ class PasajeroForm(forms.ModelForm):
             'apellido': 'Apellido',
             'pasaporte': 'Documento de Identidad',
             'nacionalidad': 'Nacionalidad',
-            'genero': 'Genero',
-            'email': 'Correo Electronico',
-            'telefono': 'Telefono',
+            'genero': 'Género',
+            'email': 'Correo Electrónico',
+            'telefono': 'Teléfono',
         }
         widgets = {
             'fecha_nacimiento': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),

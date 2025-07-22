@@ -48,6 +48,19 @@ footer a:hover {
     color: rgba(255, 255, 255, 1);
 }
 
+/* modals styles */
+.modal-content {
+    background-color: transparent; 
+    border: none;
+}
+
+.modal-body{
+    background-image: url('/static/img/login_bg3.png'); 
+    background-size: cover;
+    background-position: center top;
+    padding: 2rem;
+    border-radius: 1rem;
+}
 
 /* index page styles */
 .feature-icon {

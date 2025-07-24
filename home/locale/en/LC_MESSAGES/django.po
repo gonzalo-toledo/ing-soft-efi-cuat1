@@ -1,0 +1,256 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-24 19:43-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAILhnology and a vision focused on "
+"op@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: templates/components/buscador.html:3
+msgid "Buscar Vuelos"
+msgstr "Search Flights"
+
+#: templates/components/buscador.html:9 templates/components/buscador.html:12
+msgid "Origen"
+msgstr "Origin"
+
+#: templates/components/buscador.html:22 templates/components/buscador.html:25
+msgid "Destino"
+msgstr "Destination"
+
+#: templates/components/buscador.html:35
+msgid "Fecha"
+msgstr "Date"
+
+#: templates/components/buscador.html:43
+msgid "Buscar"
+msgstr "Search"
+
+#: templates/components/buscador.html:47
+msgid "Limpiar filtros"
+msgstr "Clean filters"
+
+#: templates/index.html:5
+msgid "SkyWay Airlines - Home"
+msgstr "SkyWay Airlines - Home"
+
+#: templates/index.html:14 templates/layouts/footer.html:6
+msgid "SkyWay Airlines"
+msgstr "SkyWay Airlines"
+
+#: templates/index.html:15
+msgid "Sistema de Gestión de Aerolínea"
+msgstr "Airline Management System"
+
+#: templates/index.html:17
+msgid ""
+"Gestiona tus vuelos con una plataforma moderna e intuitiva. Descubre nuevos "
+"destinos con nuestro servicio premium."
+msgstr ""
+"Manage your flights with a modern and intuitive platform. Discover new "
+"destinations with our premium service."
+
+#: templates/index.html:22
+msgid "Vuelos disponibles"
+msgstr "Available Flights"
+
+#: templates/index.html:26
+msgid "Registrarse"
+msgstr "Register"
+
+#: templates/index.html:41
+msgid "¿Por qué elegir SkyWay Airlines?"
+msgstr "Why Choose SkyWay Airlines?"
+
+#: templates/index.html:42
+msgid ""
+"Optimizamos la gestión aérea con tecnología moderna y una visión centrada en "
+"la eficiencia operativa."
+msgstr ""
+"We optimize air management with modern technology and a vision focused on "
+"operational efficiency."
+
+#: templates/index.html:53
+msgid "Atención de calidad"
+msgstr "Quality Service"
+
+#: templates/index.html:54
+msgid ""
+"Nuestra flota está equipada con la última tecnología para garantizar "
+"seguridad y confort."
+msgstr ""
+"Our fleet is equipped with the latest technology to ensure safety and "
+"comfort."
+
+#: templates/index.html:65
+msgid "Aviones modernos"
+msgstr "Modern Aircraft"
+
+#: templates/index.html:66
+msgid ""
+"Viajás en aeronaves nuevas, confortables y con el mejor servicio a bordo."
+msgstr "Travel on new, comfortable aircraft with the best onboard service."
+
+#: templates/index.html:77
+msgid "Conexión internacional"
+msgstr "International Connection"
+
+#: templates/index.html:78
+msgid ""
+"Llegá a más de 150 destinos en todo el mundo con opciones de horarios "
+"accesibles."
+msgstr ""
+"Reach over 150 destinations worldwide with convenient scheduling options."
+
+#: templates/index.html:89
+msgid "Vuelos diarios"
+msgstr "Daily Flights"
+
+#: templates/index.html:90
+msgid ""
+"Más de 500 vuelos diarios a todo el mundo, para que puedas disfrutar de tus "
+"destinos favoritos."
+msgstr ""
+"More than 500 daily flights worldwide, so you can enjoy your favorite "
+"destinations."
+
+#: templates/index.html:102
+msgid "Destinos"
+msgstr "Destinations"
+
+#: templates/index.html:106
+msgid "Vuelos Diarios"
+msgstr "Daily Flights"
+
+#: templates/index.html:110
+msgid "Aeronaves"
+msgstr "Aircraft"
+
+#: templates/index.html:114
+msgid "Pasajeros"
+msgstr "Passengers"
+
+#: templates/index.html:121
+msgid "Lo que dicen nuestros pasajeros"
+msgstr "What Our Passengers Say"
+
+#: templates/index.html:133
+msgid ""
+"Excelente servicio, puntualidad y atención. Definitivamente volveré a volar "
+"con SkyWay Airlines."
+msgstr ""
+"Excellent service, punctuality, and attention. I will definitely fly again "
+"with SkyWay Airlines."
+
+#: templates/index.html:139
+msgid "María Rodríguez"
+msgstr "Maria Rodriguez"
+
+#: templates/index.html:140
+msgid "Buenos Aires"
+msgstr "Buenos Aires"
+
+#: templates/index.html:156
+msgid ""
+"Los aviones son modernos y cómodos. El personal de a bordo siempre atento y "
+"amable."
+msgstr ""
+"The airplanes are modern and comfortable. The onboard staff is always "
+"attentive and friendly."
+
+#: templates/index.html:162
+msgid "Juan González"
+msgstr "Juan Gonzalez"
+
+#: templates/index.html:163
+msgid "Madrid"
+msgstr "Madrid"
+
+#: templates/index.html:179
+msgid ""
+"La plataforma de reservas es muy intuitiva y fácil de usar. Recomiendo "
+"SkyWay Airlines."
+msgstr ""
+"The booking platform is very intuitive and easy to use. I recommend SkyWay "
+"Airlines."
+
+#: templates/index.html:185
+msgid "Ana López"
+msgstr "Ana Lopez"
+
+#: templates/index.html:186
+msgid "New York"
+msgstr "New York"
+
+#: templates/layouts/footer.html:8
+msgid ""
+"Tu plataforma de confianza para encontrar vuelos, gestionar reservas y "
+"explorar nuevos destinos. Siempre un paso más cerca del cielo."
+msgstr ""
+"Your trusted platform to find flights, manage bookings, and explore new "
+"destinations. Always one step closer to the sky."
+
+#: templates/layouts/footer.html:12
+msgid "Enlaces rápidos"
+msgstr "Quick Links"
+
+#: templates/layouts/footer.html:14
+msgid "Inicio"
+msgstr "Home"
+
+#: templates/layouts/footer.html:15 templates/layouts/navbar.html:23
+msgid "Vuelos"
+msgstr "Flights"
+
+#: templates/layouts/footer.html:17 templates/layouts/navbar.html:16
+msgid "Mis reservas"
+msgstr "My Bookings"
+
+#: templates/layouts/footer.html:18 templates/layouts/navbar.html:19
+msgid "Mis boletos"
+msgstr "My Tickets"
+
+#: templates/layouts/footer.html:23
+msgid "Contacto"
+msgstr "Contact"
+
+#: templates/layouts/footer.html:39
+msgid "Todos los derechos reservados."
+msgstr "All rights reserved."
+
+#: templates/layouts/navbar.html:28
+msgid "Panel Staff"
+msgstr "Staff Panel"
+
+#: templates/layouts/navbar.html:32
+msgid "Pasajeros por Vuelo"
+msgstr "Passengers per Flight"
+
+#: templates/layouts/navbar.html:36
+msgid "Administración"
+msgstr "Administration"
+
+#: templates/layouts/navbar.html:71
+msgid "Cerrar sesión"
+msgstr "Logout"
+
+#: templates/layouts/navbar.html:75
+msgid "Iniciar sesión"
+msgstr "Login"
+
+#: templates/layouts/navbar.html:78
+msgid "Registrate"
+msgstr "Sign Up"

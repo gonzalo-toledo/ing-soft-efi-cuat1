@@ -75,6 +75,7 @@ TEMPLATES = [
                 'home.context_processors.login_form',  # Custom context processor
                 'home.context_processors.register_form',  # Custom context processor
                 'vuelos.context_processors.aeropuertos_disponibles',  # Custom context processor0
+                'home.context_processors.pasajero_formulario_context',
             ],
         },
     },

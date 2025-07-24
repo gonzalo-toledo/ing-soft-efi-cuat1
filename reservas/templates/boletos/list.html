@@ -13,9 +13,6 @@
             <div class="display-6 fw-bold text-primary">{{ boletos|length }}</div>
             <div class="text-muted">Total de boletos</div>
         </div>
-        <div class="card-footer d-flex justify-content-around align-items-center">
-            <!-- Acá van los boletos por pasajero del usuario FALTA CREAR LA VIEW-->
-        </div>
     </div>
 
     <!-- Tickets Grid -->
@@ -51,7 +48,7 @@
                         
                         <!-- Passenger Info -->
                         <div class="d-flex align-items-center gap-2 mb-3">
-                            <span class="text-primary">👤</span>
+                            <span>👤</span>
                             <div>
                                 <div class="text-muted small">PASAJERO</div>
                                 <div class="fw-semibold text-dark">{{ boleto.reserva.pasajero }}</div>
@@ -60,7 +57,7 @@
                         
                         <!-- Emission Date -->
                         <div class="d-flex align-items-center gap-2 mb-3">
-                            <span class="text-primary">📅</span>
+                            <span>📅</span>
                             <div>
                                 <div class="text-muted small">FECHA DE EMISIÓN</div>
                                 <div class="fw-semibold text-dark">{{ boleto.fecha_emision|date:"d/m/Y H:i" }}</div>
@@ -69,7 +66,7 @@
                         
                         <!-- Reservation Info -->
                         <div class="d-flex align-items-center gap-2">
-                            <span class="text-primary">📋</span>
+                            <span>📋</span>
                             <div>
                                 <div class="text-muted small">RESERVA</div>
                                 {% if boleto.reserva %}

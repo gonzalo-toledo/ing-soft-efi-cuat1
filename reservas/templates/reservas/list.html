@@ -13,9 +13,6 @@
             <div class="display-6 fw-bold text-primary">{{ reservas|length }}</div>
             <div class="text-muted">Total de Reservas</div>
         </div>
-        <div class="card-footer d-flex justify-content-around align-items-center">
-            <!-- Acá van las reservas por pasajero del usuario FALTA CREAR LA VIEW-->
-        </div>
     </div>
 
     <!-- reservas Grid -->
@@ -45,7 +42,7 @@
                         <div class="card-body">
                             <!-- Passenger Info -->
                             <div class="d-flex align-items-center gap-2 mb-3">
-                                <span class="text-primary">👤</span>
+                                <span>👤</span>
                                 <div>
                                     <div class="text-muted small">PASAJERO</div>
                                     <div class="fw-semibold text-dark">{{ reserva.pasajero }}</div>
@@ -54,7 +51,7 @@
                             
                             <!-- Emission Date -->
                             <div class="d-flex align-items-center gap-2 mb-3">
-                                <span class="text-primary">📅</span>
+                                <span>📅</span>
                                 <div>
                                     <div class="text-muted small">FECHA DE RESERVA</div>
                                     <div class="fw-semibold text-dark">{{ reserva.fecha_reserva|date:"d/m/Y H:i" }}</div>
@@ -63,7 +60,7 @@
                             
                             <!-- Reservation Info -->
                             <div class="d-flex align-items-center gap-2">
-                                <span class="text-primary">📋</span>
+                                <span>📋</span>
                                 <div>
                                     <div class="text-muted small">VUELO</div>
                                     <div class="fw-semibold text-dark">

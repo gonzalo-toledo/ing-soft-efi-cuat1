@@ -1,4 +1,5 @@
 from home.forms import LoginForm, RegisterForm
+from pasajeros.forms import PasajeroForm
 
 def login_form(request):
     """
@@ -18,4 +19,10 @@ def register_form(request):
     """
     return {
         'register_form': RegisterForm()
+    }
+    
+
+def pasajero_formulario_context(request):
+    return {
+        'form_pasajero': PasajeroForm()
     }

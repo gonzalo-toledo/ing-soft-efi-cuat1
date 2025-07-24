@@ -4,13 +4,24 @@ from home.forms import LoginForm, RegisterForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from pasajeros.models import Pasajero
+from reservas.models import Reserva
+
 # Create your views here.
 
 class PerfilView(View):
     def get(self, request):
+        pasajeros = Pasajero.objects.filter(usuario=request.user)      
+        reservas = Reserva.objects.filter(pasajero__in=pasajeros).select_related('vuelo', 'pasajero', 'asiento')
+        reservas_vuelos_aterrizados = reservas.filter(vuelo__estado='Aterrizado').order_by('-vuelo__fecha_salida')
+        
         return render(
             request, 
-            'account/perfil.html'
+            'account/perfil.html',
+            {
+                'pasajeros': pasajeros,
+                'reservas_vuelos_aterrizados': reservas_vuelos_aterrizados
+            }
         )
 
 class HomeView(View):
@@ -46,7 +57,6 @@ class RegisterView(View):
                     messages.error(request, f"{form.fields[field].label}: {error}" if field in form.fields else error)
 
             return render(request, 'account/register.html', {'form': form})
-              
 
 class LoginView(View):
     def get(self, request):

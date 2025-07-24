@@ -3,46 +3,44 @@
 <div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content p-0 overflow-hidden">
-        <div 
-            class="modal-body text-white position-relative">
-            <div class="text-center mb-4">
-            <h1 class="fw-bold">SkyWay Airlines</h1>
-            <h5 class="mt-2">Registro de Usuario</h5>
+            <div class="modal-body text-white position-relative">
+                <div class="text-center mb-4">
+                    <h1 class="fw-bold">SkyWay Airlines</h1>
+                    <h5 class="mt-2">Registro de Usuario</h5>
+                </div>
+
+                <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                <form action="{% url 'register' %}" method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        {{ register_form.username|add_class:"form-control bg-light text-dark border-0 shadow-sm" }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ register_form.email|add_class:"form-control bg-light text-dark border-0 shadow-sm" }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ register_form.password1|add_class:"form-control bg-light text-dark border-0 shadow-sm" }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ register_form.password2|add_class:"form-control bg-light text-dark border-0 shadow-sm" }}
+                    </div>
+
+                    <div class="d-grid mt-3">
+                        <button type="submit" class="btn btn-primary btn-lg shadow">Registrar</button>
+                    </div>
+
+                    <div class="mt-3 text-center">
+                        <p class="m-0 text-light">¿Ya estás registrado?
+                            <a href="#" class="text-warning fw-bold" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar sesión</a>
+                        </p>
+                    </div>
+                </form>
             </div>
-
-            <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
-
-
-            <form action="{% url 'register' %}" method="post">
-            {% csrf_token %}
-
-            <div class="mb-3">
-                {{ register_form.username|add_class:"form-control bg-light text-dark border-0 shadow-sm" }}
-            </div>
-
-            <div class="mb-3">
-                {{ register_form.email|add_class:"form-control bg-light text-dark border-0 shadow-sm" }}
-            </div>
-
-            <div class="mb-3">
-                {{ register_form.password1|add_class:"form-control bg-light text-dark border-0 shadow-sm" }}
-            </div>
-
-            <div class="mb-3">
-                {{ register_form.password2|add_class:"form-control bg-light text-dark border-0 shadow-sm" }}
-            </div>
-
-            <div class="d-grid mt-3">
-                <button type="submit" class="btn btn-primary btn-lg shadow">Registrar</button>
-            </div>
-
-            <div class="mt-3 text-center">
-                <p class="m-0 text-light">¿Ya estás registrado?
-                <a href="#" class="text-warning fw-bold" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar sesión</a>
-                </p>
-            </div>
-            </form>
-        </div>
         </div>
     </div>
 </div>

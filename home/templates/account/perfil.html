@@ -4,87 +4,119 @@
 {% block content %}
 {% if user.is_authenticated %}
 
-<div class="card shadow my-4">
-  <div class="card-body">
-    <h2><i class="bi bi-person-circle"></i> {{ user.get_full_name }} ({{ user.username }})</h2>
-    <p><strong>Email:</strong> {{ user.email }}</p>
-    <p><strong>DNI:</strong> {{ user.pasaporte }}</p> <!-- Renombrado en label -->
-  </div>
-</div>
+    <!-- PERFIL DEL USUARIO -->
+    <div class="card shadow my-4 py-4 bg-perfil" style="background-image: url('/static/img/bg-feature-card-3.jpeg'); background-size: cover; background-position: center;">
+        <div class="card-body text-center">
+            <i class="bi bi-person-circle fs-1 mb-2 text-white"></i>
+            <h2 class="display-6 text-white">@{{ user.username }}</h2>
+            <p class="text-white">{{ user.email }}</p>
+        </div>
+    </div>
 
-<!-- PASAJEROS ASOCIADOS AL USUARIO -->
-<div class="card shadow mb-4">
-  <div class="card-header">
-    <h4><i class="bi bi-people"></i> Pasajeros Registrados</h4>
-  </div>
-  <div class="card-body">
-    {% if pasajeros %}
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Apellido</th>
-          <th>DNI</th>
-          <th>Fecha Nacimiento</th>
-          <th>Teléfono</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for pasajero in pasajeros %}
-        <tr>
-          <td>{{ pasajero.nombre }}</td>
-          <td>{{ pasajero.apellido }}</td>
-          <td>{{ pasajero.pasaporte }}</td>
-          <td>{{ pasajero.fecha_nacimiento|date:"d/m/Y" }}</td>
-          <td>{{ pasajero.telefono }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% else %}
-      <p>No hay pasajeros asociados aún.</p>
-    {% endif %}
-  </div>
-</div>
+    <!-- PASAJEROS ASOCIADOS AL USUARIO -->
+    <div class="card shadow mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #d3e0ee;">
+            <h4 class="mb-0"><i class="bi bi-people me-2"></i> Pasajeros Registrados</h4>
+            <button type="button" class="btn btn-success btn-sm rounded-pill" data-bs-toggle="modal" data-bs-target="#crearPasajeroModal">
+                <i class="bi bi-plus-circle me-2"></i>Crear nuevo pasajero
+            </button>
+        </div>
+        <div class="card-body">
+            {% if pasajeros %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="text-center">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>DNI</th>
+                            <th>Fecha Nacimiento</th>
+                            <th>Nacionalidad</th>
+                            <th>Género</th>
+                            <th>Correo Electrónico</th>
+                            <th>Teléfono</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        {% for pasajero in pasajeros %}
+                        <tr>
+                            <td>{{ pasajero.nombre }}</td>
+                            <td>{{ pasajero.apellido }}</td>
+                            <td>{{ pasajero.pasaporte }}</td>
+                            <td>{{ pasajero.fecha_nacimiento|date:"d/m/Y" }}</td>
+                            <td>{{ pasajero.nacionalidad }}</td>
+                            <td>{{ pasajero.genero }}</td>
+                            <td>{{ pasajero.email }}</td>
+                            <td>{{ pasajero.telefono }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No hay pasajeros asociados aún.</p>
+            {% endif %}
+        </div>
+    </div>
 
-<!-- HISTORIAL DE VUELOS -->
-<div class="card shadow mb-4">
-  <div class="card-header">
-    <h4><i class="bi bi-airplane-engines"></i> Historial de Vuelos</h4>
-  </div>
-  <div class="card-body">
-    {% if historial %}
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Origen</th>
-          <th>Destino</th>
-          <th>Fecha Salida</th>
-          <th>Fecha Llegada</th>
-          <th>Asiento</th>
-          <th>Clase</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for reserva in historial %}
-        <tr>
-          <td>{{ reserva.vuelo.origen.nombre }}</td>
-          <td>{{ reserva.vuelo.destino.nombre }}</td>
-          <td>{{ reserva.vuelo.fecha_salida|date:"d/m/Y H:i" }}</td>
-          <td>{{ reserva.vuelo.fecha_llegada|date:"d/m/Y H:i" }}</td>
-          <td>{{ reserva.asiento.numero }}</td>
-          <td>{{ reserva.asiento.tipo }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table> 
-    {% else %}
-      <p>No hay vuelos registrados.</p>
-    {% endif %}
-  </div>
-</div>
+    <!-- HISTORIAL DE VUELOS -->
+    <div class="card shadow mb-4">
+        <div class="card-header" style="background-color: #d3e0ee;">
+            <h4><i class="bi bi-airplane-engines me-2"></i> Historial de Vuelos</h4>
+        </div>
+        <div class="card-body">
+            {% if reservas_vuelos_aterrizados %}
+            <div class="table-responsive">
+                <table class="table table-striped align-middle">
+                    <thead class="text-center">
+                        <tr>
+                            <th>📅 Fecha Salida</th>
+                            <th>📍 Origen</th>
+                            <th>📍 Destino</th>
+                            <th>✅ Fecha Llegada</th>
+                            <th>👤 Pasajero</th>
+                            <th>💺 Asiento</th>
+                            <th>⭐ Clase</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        {% for reserva in reservas_vuelos_aterrizados %}
+                        <tr>
+                            <td>{{ reserva.vuelo.fecha_salida|date:"d/m/Y H:i" }}</td>
+                            <td>{{ reserva.vuelo.origen.ciudad }}</td>
+                            <td>{{ reserva.vuelo.destino.ciudad }}</td>
+                            <td>{{ reserva.vuelo.fecha_llegada|date:"d/m/Y H:i" }}</td>
+                            <td>{{ reserva.pasajero.nombre }} {{ reserva.pasajero.apellido }}</td>
+                            <td>{{ reserva.asiento.numero }}</td>
+                            <td>
+                                <span class="badge 
+                                    {% if reserva.asiento.tipo == 'P' %}bg-info
+                                    {% else %}bg-primary{% endif %}">
+                                    {{ reserva.asiento.tipo }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No hay vuelos registrados.</p>
+            {% endif %}
+        </div>
+    </div>
 
+
+    <!-- Enlaces -->
+    <div class="card mt-4 border-0 shadow">
+        <div class="card-body d-flex flex-wrap gap-3 justify-content-start">
+            <a href="{% url 'vuelo_list' %}" class="btn btn-outline-primary btn-md rounded-pill"><i class="bi bi-arrow-left"></i> Volver a Vuelos</a>
+        </div>
+    </div>
 {% else %}
 <p>Iniciá sesión para ver tu perfil.</p>
 {% endif %}
+
+{% include "pasajeros/pasajero_create.html" %}
+
 {% endblock %}

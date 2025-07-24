@@ -48,6 +48,13 @@ footer a:hover {
     color: rgba(255, 255, 255, 1);
 }
 
+/* perfil usuario style */
+.bg-perfil {
+    background-image: url('/static/img/bg-feature-card-3.jpeg'); 
+    background-size: cover;
+    background-position: center center;
+}
+
 /* modals styles */
 .modal-content {
     background-color: transparent; 

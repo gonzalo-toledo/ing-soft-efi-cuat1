@@ -1,5 +1,9 @@
-from django import forms
+from django import forms 
 from .models import Pasajero
+from django.utils import timezone
+
+
+
 
 class PasajeroForm(forms.ModelForm):
     class Meta:

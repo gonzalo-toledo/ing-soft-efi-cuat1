@@ -5,7 +5,7 @@
 {% if user.is_authenticated %}
 
     <!-- PERFIL DEL USUARIO -->
-    <div class="card shadow my-4 py-4 bg-perfil" style="background-image: url('/static/img/bg-feature-card-3.jpeg'); background-size: cover; background-position: center;">
+    <div class="card shadow my-4 py-4 bg-perfil rounded-4" style="background-image: url('/static/img/bg-feature-card-3.jpeg'); background-size: cover; background-position: center;">
         <div class="card-body text-center">
             <i class="bi bi-person-circle fs-1 mb-2 text-white"></i>
             <h2 class="display-6 text-white">@{{ user.username }}</h2>

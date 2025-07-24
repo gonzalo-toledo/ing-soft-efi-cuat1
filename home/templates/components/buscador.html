@@ -1,4 +1,4 @@
-<div class="card search-card mb-5 shadow" style="{% if es_index %}margin-top: -100px; {% endif %} border-radius: 15px; z-index: 100; position: relative;">
+<div class="card search-card mb-5 shadow rounded-4" style="{% if es_index %}margin-top: -100px; {% endif %}; z-index: 100; position: relative;">
     <div class="card-body p-4">
         <h4 class="card-title mb-4">Buscar Vuelos</h4>
         <form action="{% url 'buscar_vuelos' %}" method="get" id="form-busqueda">

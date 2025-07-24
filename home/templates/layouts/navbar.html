@@ -36,7 +36,7 @@
                             <i class="bi bi-shield-check text-warning fw-bold ms-1 ">Staff</i> 
                         {% endif %}
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="perfilDropdown">
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="perfilDropdown">
                         <li>
                             <a href="{% url 'perfil' %}" class="dropdown-item">
                                 <i class="bi bi-person-circle me-2"></i> Perfil de usuario
@@ -48,11 +48,13 @@
                         <li>
                             <a class="dropdown-item" href="{% url 'boleto_list' %}">Mis boletos</a>
                         </li>
-                        <li>
-                            <a class="dropdown-item text-warning" href="{% url 'vuelos_pasajeros_staff' %}">
-                                <i class="bi bi-shield-exclamation "></i> Panel Staff
-                            </a>
-                        </li>
+                        {% if user.is_staff %}
+                            <li>
+                                <a class="dropdown-item text-warning" href="{% url 'vuelos_pasajeros_staff' %}">
+                                    <i class="bi bi-shield-exclamation "></i> Panel Staff
+                                </a>
+                            </li>
+                        {% endif %}
                         <li>
                             <hr class="dropdown-divider">
                         </li>

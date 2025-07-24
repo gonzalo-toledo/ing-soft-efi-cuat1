@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from pasajeros.models import Pasajero
 from reservas.models import Reserva
+from pasajeros.forms import PasajeroForm
 
 # Create your views here.
 
@@ -14,13 +15,14 @@ class PerfilView(View):
         pasajeros = Pasajero.objects.filter(usuario=request.user)      
         reservas = Reserva.objects.filter(pasajero__in=pasajeros).select_related('vuelo', 'pasajero', 'asiento')
         reservas_vuelos_aterrizados = reservas.filter(vuelo__estado='Aterrizado').order_by('-vuelo__fecha_salida')
-        
+        form = PasajeroForm()
         return render(
             request, 
             'account/perfil.html',
             {
                 'pasajeros': pasajeros,
-                'reservas_vuelos_aterrizados': reservas_vuelos_aterrizados
+                'reservas_vuelos_aterrizados': reservas_vuelos_aterrizados,
+                'form': form,
             }
         )
 
@@ -33,12 +35,7 @@ class HomeView(View):
 
 class RegisterView(View):
     def get(self, request):
-        form = RegisterForm()
-        return render(
-            request,
-            'account/register.html',
-            {'form': form}
-        )
+        return render(request)
     def post(self, request):
         form = RegisterForm(request.POST)
         next_url = request.POST.get('next') or request.META.get('HTTP_REFERER') or 'index'
@@ -56,7 +53,7 @@ class RegisterView(View):
                 for error in errors:
                     messages.error(request, f"{form.fields[field].label}: {error}" if field in form.fields else error)
 
-            return render(request, 'account/register.html', {'form': form})
+            return render(request)
 
 class LoginView(View):
     def get(self, request):

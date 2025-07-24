@@ -115,7 +115,7 @@
                     {% if reservas_confirmadas %}
                         <div class="table-responsive">
                             <table class="table table-striped">
-                                <thead class="table-success">
+                                <thead class="table-success text-center">
                                     <tr>
                                         <th>Pasajero</th>
                                         <th>Email</th>
@@ -127,19 +127,23 @@
                                 <tbody>
                                     {% for reserva in reservas_confirmadas %}
                                     <tr>
-                                        <td>
+                                        <td class="align-middle text-center" class="align-middle text-center">
                                             <strong>{{ reserva.pasajero.nombre }} {{ reserva.pasajero.apellido }}</strong>
                                             <br>
                                             <small class="text-muted">{{ reserva.pasajero.username }}</small>
                                         </td>
-                                        <td>{{ reserva.pasajero.email }}</td>
-                                        <td>
+                                        <td class="align-middle text-center" class="align-middle text-center">{{ reserva.pasajero.email }}</td>
+                                        <td class="align-middle text-center" class="align-middle text-center">
                                             <span class="badge bg-primary">{{ reserva.asiento.numero }}</span>
                                         </td>
-                                        <td>
-                                            <span class="badge bg-info">{{ reserva.asiento.tipo }}</span>
+                                        <td class="align-middle text-center">
+                                            <span class="badge 
+                                                {% if reserva.asiento.tipo == 'P' %}bg-info
+                                                {% else %}bg-primary{% endif %}">
+                                                {{ reserva.asiento.tipo }}
+                                            </span>
                                         </td>
-                                        <td>
+                                        <td class="align-middle text-center">
                                             {% if reserva.fecha_reserva %}
                                                 {{ reserva.fecha_reserva|date:"d/m/Y H:i" }}
                                             {% else %}
@@ -175,7 +179,7 @@
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-striped">
-                            <thead class="table-warning">
+                            <thead class="table-warning text-center">
                                 <tr>
                                     <th>Pasajero</th>
                                     <th>Email</th>
@@ -187,19 +191,23 @@
                             <tbody>
                                 {% for reserva in reservas_pendientes %}
                                     <tr>
-                                        <td>
+                                        <td class="align-middle text-center">
                                             <strong>{{ reserva.pasajero.nombre }} {{ reserva.pasajero.apellido }}</strong>
                                             <br>
                                             <small class="text-muted">{{ reserva.pasajero.username }}</small>
                                         </td>
-                                        <td>{{ reserva.pasajero.email }}</td>
-                                        <td>
+                                        <td class="align-middle text-center">{{ reserva.pasajero.email }}</td>
+                                        <td class="align-middle text-center">
                                             <span class="badge bg-primary">{{ reserva.asiento.numero }}</span>
                                         </td>
-                                        <td>
-                                            <span class="badge bg-info">{{ reserva.asiento.tipo }}</span>
+                                        <td class="align-middle text-center">
+                                            <span class="badge 
+                                                {% if reserva.asiento.tipo == 'P' %}bg-info
+                                                {% else %}bg-primary{% endif %}">
+                                                {{ reserva.asiento.tipo }}
+                                            </span>
                                         </td>
-                                        <td>
+                                        <td class="align-middle text-center">
                                             {% if reserva.fecha_reserva %}
                                                 {{ reserva.fecha_reserva|date:"d/m/Y H:i" }}
                                             {% else %}
@@ -230,7 +238,7 @@
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-striped">
-                            <thead class="table-danger">
+                            <thead class="table-danger text-center">
                                 <tr>
                                     <th>Pasajero</th>
                                     <th>Email</th>
@@ -242,19 +250,23 @@
                             <tbody>
                                 {% for reserva in reservas_canceladas %}
                                 <tr>
-                                    <td>
+                                    <td class="align-middle text-center">
                                         <strong>{{ reserva.pasajero.nombre }} {{ reserva.pasajero.apellido }}</strong>
                                         <br>
                                         <small class="text-muted">{{ reserva.pasajero.username }}</small>
                                     </td>
-                                    <td>{{ reserva.pasajero.email }}</td>
-                                    <td>
+                                    <td class="align-middle text-center">{{ reserva.pasajero.email }}</td>
+                                    <td class="align-middle text-center">
                                         <span class="badge bg-primary">{{ reserva.asiento.numero }}</span>
                                     </td>
-                                    <td>
-                                        <span class="badge bg-info">{{ reserva.asiento.tipo }}</span>
+                                    <td class="align-middle text-center">
+                                        <span class="badge 
+                                            {% if reserva.asiento.tipo == 'P' %}bg-info
+                                            {% else %}bg-primary{% endif %}">
+                                            {{ reserva.asiento.tipo }}
+                                        </span>
                                     </td>
-                                    <td>
+                                    <td class="align-middle text-center">
                                         {% if reserva.fecha_reserva %}
                                             {{ reserva.fecha_reserva|date:"d/m/Y H:i" }}
                                         {% else %}

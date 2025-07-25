@@ -14,8 +14,23 @@ class VueloList(ListView):
     context_object_name = 'vuelos'
     
     def get_queryset(self):
-        # Solo mostrar vuelos programados
-        return Vuelo.objects.filter(estado='Programado').select_related('avion', 'origen', 'destino')    
+        # Paso 1: Traer todos los vuelos que podrían necesitar actualización
+        todos_los_vuelos = Vuelo.objects.filter(
+            estado__in=['Programado', 'En Vuelo', 'Aterrizado']
+        ).select_related('avion', 'origen', 'destino')
+
+        # Paso 2: Actualizar el estado de cada vuelo
+        for vuelo in todos_los_vuelos:
+            vuelo.actualizar_estado()
+
+        # Paso 3: Filtrar en memoria los que ahora están Programado o En Vuelo
+        vuelos_mostrables = [
+            vuelo for vuelo in todos_los_vuelos
+            if vuelo.estado in ['Programado', 'En Vuelo']
+        ]
+
+        return vuelos_mostrables
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
@@ -41,6 +56,7 @@ class VueloDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         vuelo = self.get_object()
+        vuelo.actualizar_estado() # Actualizar el estado del vuelo
         
         # Obtener todos los asientos del avión
         asientos_avion = Asiento.objects.filter(avion=vuelo.avion).order_by('numero')
@@ -96,7 +112,9 @@ class BuscarVueloView(ListView):
         destino = self.request.GET.get('destino')
         fecha = self.request.GET.get('fecha')
 
-        queryset = Vuelo.objects.filter(estado='Programado')
+        queryset = Vuelo.objects.filter(
+            estado__in=['Programado', 'En Vuelo', 'Aterrizado']
+        )
 
         if origen:
             queryset = queryset.filter(origen__iata=origen)
@@ -107,7 +125,13 @@ class BuscarVueloView(ListView):
                 fecha_solo=TruncDate('fecha_salida')
             ).filter(fecha_solo=fecha)
 
-        return queryset.select_related('avion', 'origen', 'destino')
+        vuelos = queryset.select_related('avion', 'origen', 'destino')
+        
+        for vuelo in vuelos:
+            vuelo.actualizar_estado()  # 🔄 También acá actualizás el estado
+
+        return vuelos
+
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -146,12 +170,16 @@ class VuelosPasajerosStaffView(StaffRequiredMixin, ListView):
     context_object_name = 'vuelos'
     
     def get_queryset(self):
-        return Vuelo.objects.filter(
-            estado__in=['Programado', 'En Vuelo', 'Aterrizado']
+        vuelos = Vuelo.objects.filter(
+            estado__in=['Programado', 'En Vuelo', 'Aterrizado', 'Cancelado', 'Retrasado']
         ).select_related('avion', 'origen', 'destino').prefetch_related(
             'reserva_set__pasajero',
             'reserva_set__asiento'
         ).order_by('-fecha_salida')
+        for vuelo in vuelos:
+            vuelo.actualizar_estado()  # 🔄 También acá actualizás el estado
+
+        return vuelos
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

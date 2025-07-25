@@ -1,4 +1,26 @@
-﻿EVALUACIÓN FINAL INTEGRADORA - SISTEMA DE GESTIÓN DE AEROLÍNEA
+FUNCIONALIDADES OBLIGATORIAS PENDIENTES:
+2. Gestión de Pasajeros:
+   - Información personal (nombre, documento, contacto)
+   - Historial de vuelos
+
+3. Sistema de Reservas:
+   - Gestión de estados (disponible, reservado, ocupado)
+   - Generación de boletos electrónicos 
+
+
+ERRORES:
+- No permitir hacer reservas de vuelos con fecha anterior a la actual. Deberia cambiar de estado al pasar la fecha. 
+- alerta al crear una reserva es largo y no se cierra. Ver que se comporten todos los mensajes igual.
+
+
+
+MEJORAS PENDIENTES:
+- Al crear reserva ofrecer con modal crear otra reserva - finalizar vuelo
+- Mostrar en reservas y boletos solo los activos por usuario y ofrecer el historial
+
+
+
+EVALUACIÓN FINAL INTEGRADORA - SISTEMA DE GESTIÓN DE AEROLÍNEA
 
 
 Objetivo:

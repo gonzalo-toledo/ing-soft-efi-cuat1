@@ -1,15 +1,16 @@
+{% load i18n %}
 <div class="card search-card mb-5 shadow" style="{% if es_index %}margin-top: -100px; {% endif %} border-radius: 15px; z-index: 100; position: relative;">
     <div class="card-body p-4">
-        <h4 class="card-title mb-4">Buscar Vuelos</h4>
+        <h4 class="card-title mb-4">{% trans "Buscar Vuelos" %}</h4>
         <form action="{% url 'buscar_vuelos' %}" method="get" id="form-busqueda">
             {% csrf_token %}
             <div class="row g-3">
                 <div class="col-md-5">
                     <label for="origen" class="form-label">
-                        <i class="bi bi-geo-alt me-1 text-primary"></i>Origen
+                        <i class="bi bi-geo-alt me-1 text-primary"></i>{% trans "Origen" %}
                     </label>
                     <select id="origen" name="origen" required>
-                        <option value="">Origen</option>
+                        <option value="">{% trans "Origen" %}</option>
                         {% for aeropuerto in aeropuertos %}
                             <option value="{{ aeropuerto.iata }}">
                                 {{ aeropuerto.ciudad }}, {{ aeropuerto.pais }} ({{ aeropuerto.iata }})
@@ -19,10 +20,10 @@
                 </div>
                 <div class="col-md-5">
                     <label for="destino" class="form-label">
-                        <i class="bi bi-geo-alt-fill me-1 text-primary"></i>Destino
+                        <i class="bi bi-geo-alt-fill me-1 text-primary"></i>{% trans "Destino" %}
                     </label>
                     <select id="destino" name="destino" required>
-                        <option value="">Destino</option>
+                        <option value="">{% trans "Destino" %}</option>
                         {% for aeropuerto in aeropuertos %}
                             <option value="{{ aeropuerto.iata }}">
                                 {{ aeropuerto.ciudad }}, {{ aeropuerto.pais }} ({{ aeropuerto.iata }})
@@ -32,7 +33,7 @@
                 </div>
                 <div class="col-md-2">
                     <label for="fecha" class="form-label">
-                        <i class="bi bi-calendar-event me-1 text-primary"></i>Fecha
+                        <i class="bi bi-calendar-event me-1 text-primary"></i>{% trans "Fecha" %}
                     </label>
                     <input type="date" class="form-control" id="fecha" name="fecha" required>
                 </div>
@@ -40,13 +41,13 @@
             
             <div class="mt-4">
                 <button type="submit" class="btn btn-primary px-4 me-2">
-                    <i class="bi bi-search me-2"></i>Buscar
+                    <i class="bi bi-search me-2"></i>{% trans "Buscar" %}
                 </button>
                 {% if es_list %}
                     <a href="{% url 'vuelo_list' %}" class="btn btn-outline-danger px-4">
-                        <i class="bi bi-trash3 me-2"></i>Limpiar filtros
+                        <i class="bi bi-trash3 me-2"></i>{% trans "Limpiar filtros" %}
                     </a>
-            {% endif %}
+                {% endif %}
             </div>
         </form>
     </div>

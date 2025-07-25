@@ -1,30 +1,26 @@
+{% load i18n %}
 <footer class="mt-5 pt-4 pb-3 border-top footer">
     <div class="container">
         <div class="row">
-            <!-- Información -->
             <div class="col-md-4">
-                <h6 class="fw-bold">SkyWay Airlines</h6> 
+                <h6 class="fw-bold">{% trans "SkyWay Airlines" %}</h6> 
                 <p class="small">
-                    Tu plataforma de confianza para encontrar vuelos, gestionar reservas y explorar nuevos destinos. Siempre un paso más cerca del cielo.
+                    {% trans "Tu plataforma de confianza para encontrar vuelos, gestionar reservas y explorar nuevos destinos. Siempre un paso más cerca del cielo." %}
                 </p>
             </div>
-
-            <!-- Enlaces útiles -->
             <div class="col-md-4">
-                <h6 class="text-uppercase fw-bold">Enlaces rápidos</h6>
+                <h6 class="text-uppercase fw-bold">{% trans "Enlaces rápidos" %}</h6>
                 <ul class="list-unstyled">
-                    <li><a href="{% url 'index' %}" class="text-decoration-none">Inicio</a></li>
-                    <li><a href="{% url 'vuelo_list' %}" class="text-decoration-none">Vuelos</a></li>
+                    <li><a href="{% url 'index' %}" class="text-decoration-none">{% trans "Inicio" %}</a></li>
+                    <li><a href="{% url 'vuelo_list' %}" class="text-decoration-none">{% trans "Vuelos" %}</a></li>
                     {% if user.is_authenticated %}
-                        <li><a href="{% url 'reserva_list' %}" class="text-decoration-none">Mis reservas</a></li>
-                        <li><a href="{% url 'boleto_list' %}" class="text-decoration-none">Mis boletos</a></li>
+                        <li><a href="{% url 'reserva_list' %}" class="text-decoration-none">{% trans "Mis reservas" %}</a></li>
+                        <li><a href="{% url 'boleto_list' %}" class="text-decoration-none">{% trans "Mis boletos" %}</a></li>
                     {% endif %}
                 </ul>
             </div>
-
-            <!-- Contacto o redes -->
             <div class="col-md-4">
-                <h6 class="text-uppercase fw-bold">Contacto</h6>
+                <h6 class="text-uppercase fw-bold">{% trans "Contacto" %}</h6>
                 <ul class="list-unstyled">
                     <li><i class="bi bi-envelope-fill me-2"></i> contacto@skyway.com</li>
                     <li><i class="bi bi-telephone-fill me-2"></i> +54 11 2345 6789</li>
@@ -40,7 +36,7 @@
         <hr class="border-secondary">
 
         <div class="text-center small">
-            &copy; {% now "Y" %} SkyWay. Todos los derechos reservados.
+            &copy; {% now "Y" %} SkyWay. {% trans "Todos los derechos reservados." %}
         </div>
     </div>
 </footer>

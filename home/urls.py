@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from home.views import HomeView, RegisterView, LogoutView, LoginView
 
 urlpatterns = [
@@ -18,4 +18,5 @@ urlpatterns = [
         view=LogoutView.as_view(),
         name='logout',
     ),
+    path('i18n/', include('django.conf.urls.i18n')), 
 ]

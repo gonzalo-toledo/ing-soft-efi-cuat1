@@ -1,30 +1,29 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}SkyWay Airlines - Home{% endblock %}
+{% block title %}{% trans "SkyWay Airlines - Home" %}{% endblock %}
 
 {% block content %}
-    <!-- Hero Section with Overlay -->
     <div class="hero-banner position-relative mb-5"
         style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({% static 'img/bg-hero1.jpeg' %}); 
                background-size: cover; background-position: center; height: 500px;">
         <div class="container h-100 d-flex flex-column justify-content-center text-white">
             <div class="row">
                 <div class="col-lg-8">
-                    <h1 class="display-4 fw-bold mb-2">SkyWay Airlines</h1>
-                    <h2 class="h3 mb-4">Sistema de Gestión de Aerolínea</h2>
+                    <h1 class="display-4 fw-bold mb-2">{% trans "SkyWay Airlines" %}</h1>
+                    <h2 class="h3 mb-4">{% trans "Sistema de Gestión de Aerolínea" %}</h2>
                     <p class="fs-5 mb-4">
-                        Gestiona tus vuelos con una plataforma moderna e intuitiva. Descubre nuevos destinos con nuestro servicio premium.
+                        {% trans "Gestiona tus vuelos con una plataforma moderna e intuitiva. Descubre nuevos destinos con nuestro servicio premium." %}
                     </p>
                     <div>
                         <button class="btn btn-light btn-lg ms-3 px-4" type="button">
                             <i class="bi bi-airplane me-2"></i>
-                            <a class="text-decoration-none text-dark me-2" href="{% url 'vuelo_list' %}">Vuelos disponibles</a>
+                            <a class="text-decoration-none text-dark me-2" href="{% url 'vuelo_list' %}">{% trans "Vuelos disponibles" %}</a>
                         </button>
                         {% if not user.is_authenticated %}
-                        <button class="btn btn-outline-light btn-lg ms-3 px-4" type="button" data-bs-toggle="modal"
-                            data-bs-target="#registerModal">
-                            <i class="bi bi-person-plus me-2"></i>Registrarse
+                        <button class="btn btn-outline-light btn-lg ms-3 px-4" type="button" data-bs-toggle="modal" data-bs-target="#registerModal">
+                            <i class="bi bi-person-plus me-2"></i>{% trans "Registrarse" %}
                         </button>
                         {% endif %}
                     </div>
@@ -33,125 +32,93 @@
         </div>
     </div>
 
-    <!-- Buscador de Vuelos -->
     <div class="container">
         {% include 'components/buscador.html' with es_index=True %}
     </div>
 
-    <!-- Features Section -->
     <div class="container py-4">
         <div class="text-center mb-5">
-            <h3 class="fw-bold mb-3">¿Por qué elegir SkyWay Airlines?</h3>
-            <p class="lead text-muted">Optimizamos la gestión aérea con tecnología moderna y una visión centrada en la eficiencia operativa.</p>
+            <h3 class="fw-bold mb-3">{% trans "¿Por qué elegir SkyWay Airlines?" %}</h3>
+            <p class="lead text-muted">{% trans "Optimizamos la gestión aérea con tecnología moderna y una visión centrada en la eficiencia operativa." %}</p>
         </div>
         
         <div class="row text-center g-4">
             <div class="col-md-3">
-                <div class="card h-100 feature-card shadow-sm border-0"
-                    style="background-image: url({% static 'img/bg-feature-card-1.png' %}); background-size: cover;
-                        background-position: center; height: 300px; border-radius: 12px;">
-                    
-                    <!-- Overlay oscuro semitransparente -->
-                    <div class="position-absolute top-0 start-0 w-100 h-100"
-                        style="background-color: rgba(0, 0, 0, 0.4); border-radius: 12px;"></div>
-
-                    <!-- Contenido -->
+                <div class="card h-100 feature-card shadow-sm border-0" style="background-image: url({% static 'img/bg-feature-card-1.png' %}); background-size: cover; background-position: center; height: 300px; border-radius: 12px;">
+                    <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.4); border-radius: 12px;"></div>
                     <div class="card-body p-4 position-relative z-1">
                         <div class="feature-icon mx-auto mb-4 fs-1">
                             <i class="bi bi-emoji-smile"></i>
                         </div>
-                        <h5 class="card-title fw-bold">Atención de calidad</h5>
-                        <p class="card-text fw-semibold">Nuestra flota está equipada con la última tecnología para garantizar seguridad y confort.</p>
+                        <h5 class="card-title fw-bold">{% trans "Atención de calidad" %}</h5>
+                        <p class="card-text fw-semibold">{% trans "Nuestra flota está equipada con la última tecnología para garantizar seguridad y confort." %}</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card h-100 feature-card shadow-sm border-0" 
-                    style="background-image: url({% static 'img/bg-feature-card-2.png' %}); background-size: cover;
-                        background-position: center; height: 300px; border-radius: 12px; position: relative;">
-
-                    <!-- Overlay oscuro semitransparente -->
-                    <div class="position-absolute top-0 start-0 w-100 h-100"
-                        style="background-color: rgba(0, 0, 0, 0.4); border-radius: 12px;"></div>
-
-                    <!-- Contenido -->
+                <div class="card h-100 feature-card shadow-sm border-0" style="background-image: url({% static 'img/bg-feature-card-2.png' %}); background-size: cover; background-position: center; height: 300px; border-radius: 12px; position: relative;">
+                    <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.4); border-radius: 12px;"></div>
                     <div class="card-body p-4 position-relative z-1">
                         <div class="feature-icon mx-auto mb-4 fs-1">
                             <i class="bi bi-airplane-engines"></i>
                         </div>
-                        <h5 class="card-title fw-bold">Aviones modernos</h5>
-                        <p class="card-text fw-semibold">Viajás en aeronaves nuevas, confortables y con el mejor servicio a bordo.</p>
+                        <h5 class="card-title fw-bold">{% trans "Aviones modernos" %}</h5>
+                        <p class="card-text fw-semibold">{% trans "Viajás en aeronaves nuevas, confortables y con el mejor servicio a bordo." %}</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card h-100 feature-card shadow-sm border-0" 
-                style="background-image: url({% static 'img/bg-feature-card-3.jpeg' %}); background-size: cover;
-                    background-position: center; height: 300px; border-radius: 12px; position: relative;">
-                    
-                    <!-- Overlay oscuro semitransparente -->
-                    <div class="position-absolute top-0 start-0 w-100 h-100"
-                        style="background-color: rgba(0, 0, 0, 0.4); border-radius: 12px;"></div>
-
-                    <!-- Contenido -->
+                <div class="card h-100 feature-card shadow-sm border-0" style="background-image: url({% static 'img/bg-feature-card-3.jpeg' %}); background-size: cover; background-position: center; height: 300px; border-radius: 12px; position: relative;">
+                    <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.4); border-radius: 12px;"></div>
                     <div class="card-body p-4 position-relative z-1">
                         <div class="feature-icon mx-auto mb-4 fs-1">
                             <i class="bi bi-globe-americas"></i>
                         </div>
-                        <h5 class="card-title fw-bold">Conexión internacional</h5>
-                        <p class="card-text fw-semibold">Llegá a más de 150 destinos en todo el mundo con opciones de horarios accesibles.</p>
+                        <h5 class="card-title fw-bold">{% trans "Conexión internacional" %}</h5>
+                        <p class="card-text fw-semibold">{% trans "Llegá a más de 150 destinos en todo el mundo con opciones de horarios accesibles." %}</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card h-100 feature-card shadow-sm border-0" 
-                style="background-image: url({% static 'img/bg-feature-card-4.png' %}); background-size: cover;
-                    background-position: center; height: 300px; border-radius: 12px; position: relative;">
-                    
-                    <!-- Overlay oscuro semitransparente -->
-                    <div class="position-absolute top-0 start-0 w-100 h-100"
-                        style="background-color: rgba(0, 0, 0, 0.4); border-radius: 12px;"></div>
-
-                    <!-- Contenido -->
+                <div class="card h-100 feature-card shadow-sm border-0" style="background-image: url({% static 'img/bg-feature-card-4.png' %}); background-size: cover; background-position: center; height: 300px; border-radius: 12px; position: relative;">
+                    <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.4); border-radius: 12px;"></div>
                     <div class="card-body p-4 position-relative z-1">
                         <div class="feature-icon mx-auto mb-4 fs-1">
                             <i class="bi bi-calendar-check"></i>
                         </div>
-                        <h5 class="card-title fw-bold">Vuelos diarios</h5>
-                        <p class="card-text fw-semibold">Más de 500 vuelos diarios a todo el mundo, para que puedas disfrutar de tus destinos favoritos.</p>
+                        <h5 class="card-title fw-bold">{% trans "Vuelos diarios" %}</h5>
+                        <p class="card-text fw-semibold">{% trans "Más de 500 vuelos diarios a todo el mundo, para que puedas disfrutar de tus destinos favoritos." %}</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Stats Section -->
     <div class="bg-light py-5 mt-5">
         <div class="container">
             <div class="row text-center g-4">
                 <div class="col-md-3">
                     <h2 class="text-primary fw-bold mb-2">150+</h2>
-                    <p class="text-muted">Destinos</p>
+                    <p class="text-muted">{% trans "Destinos" %}</p>
                 </div>
                 <div class="col-md-3">
                     <h2 class="text-primary fw-bold mb-2">500+</h2>
-                    <p class="text-muted">Vuelos Diarios</p>
+                    <p class="text-muted">{% trans "Vuelos Diarios" %}</p>
                 </div>
                 <div class="col-md-3">
                     <h2 class="text-primary fw-bold mb-2">50+</h2>
-                    <p class="text-muted">Aeronaves</p>
+                    <p class="text-muted">{% trans "Aeronaves" %}</p>
                 </div>
                 <div class="col-md-3">
                     <h2 class="text-primary fw-bold mb-2">1M+</h2>
-                    <p class="text-muted">Pasajeros</p>
+                    <p class="text-muted">{% trans "Pasajeros" %}</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Testimonials Section -->
     <div class="container py-5">
-        <h3 class="fw-bold text-center mb-4">Lo que dicen nuestros pasajeros</h3>
+        <h3 class="fw-bold text-center mb-4">{% trans "Lo que dicen nuestros pasajeros" %}</h3>
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="card h-100 border-0 shadow-sm">
@@ -163,14 +130,14 @@
                             <i class="bi bi-star-fill text-warning me-1"></i>
                             <i class="bi bi-star-fill text-warning"></i>
                         </div>
-                        <p class="card-text mb-3">"Excelente servicio, puntualidad y atención. Definitivamente volveré a volar con SkyWay Airlines."</p>
+                        <p class="card-text mb-3">{% trans "Excelente servicio, puntualidad y atención. Definitivamente volveré a volar con SkyWay Airlines." %}</p>
                         <div class="d-flex align-items-center">
                             <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                                 <span>MR</span>
                             </div>
                             <div>
-                                <h6 class="mb-0">María Rodríguez</h6>
-                                <small class="text-muted">Buenos Aires</small>
+                                <h6 class="mb-0">{% trans "María Rodríguez" %}</h6>
+                                <small class="text-muted">{% trans "Buenos Aires" %}</small>
                             </div>
                         </div>
                     </div>
@@ -186,14 +153,14 @@
                             <i class="bi bi-star-fill text-warning me-1"></i>
                             <i class="bi bi-star text-warning"></i>
                         </div>
-                        <p class="card-text mb-3">"Los aviones son modernos y cómodos. El personal de a bordo siempre atento y amable."</p>
+                        <p class="card-text mb-3">{% trans "Los aviones son modernos y cómodos. El personal de a bordo siempre atento y amable." %}</p>
                         <div class="d-flex align-items-center">
                             <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                                 <span>JG</span>
                             </div>
                             <div>
-                                <h6 class="mb-0">Juan González</h6>
-                                <small class="text-muted">Madrid</small>
+                                <h6 class="mb-0">{% trans "Juan González" %}</h6>
+                                <small class="text-muted">{% trans "Madrid" %}</small>
                             </div>
                         </div>
                     </div>
@@ -209,14 +176,14 @@
                             <i class="bi bi-star-fill text-warning me-1"></i>
                             <i class="bi bi-star-half text-warning"></i>
                         </div>
-                        <p class="card-text mb-3">"La plataforma de reservas es muy intuitiva y fácil de usar. Recomiendo SkyWay Airlines."</p>
+                        <p class="card-text mb-3">{% trans "La plataforma de reservas es muy intuitiva y fácil de usar. Recomiendo SkyWay Airlines." %}</p>
                         <div class="d-flex align-items-center">
                             <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                                 <span>AL</span>
                             </div>
                             <div>
-                                <h6 class="mb-0">Ana López</h6>
-                                <small class="text-muted">Nueva York</small>
+                                <h6 class="mb-0">{% trans "Ana López" %}</h6>
+                                <small class="text-muted">{% trans "New York" %}</small>
                             </div>
                         </div>
                     </div>
@@ -224,5 +191,4 @@
             </div>
         </div>
     </div>
-
 {% endblock %}

@@ -12,8 +12,13 @@
     <form method="post">
       {% csrf_token %}
       <button type="submit" class="btn btn-success">Confirmar Pago</button>
-      <a href="{% url 'reserva_detail' reserva.id %}" class="btn btn-secondary">Volver</a>
     </form>
   </div>
 </div>
+<!-- Enlaces -->
+    <div class="card mt-4 border-0 shadow">
+        <div class="card-body d-flex flex-wrap gap-3 justify-content-between">
+            <a href="{% url 'reserva_detail' reserva.id %}" class="btn btn-outline-primary btn-md rounded-pill"><i class="bi bi-arrow-left"></i> Volver</a>
+        </div>
+    </div>
 {% endblock %}

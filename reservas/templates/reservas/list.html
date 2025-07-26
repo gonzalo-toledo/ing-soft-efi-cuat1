@@ -16,31 +16,7 @@
     </div>
 
     <!-- reservas Grid -->
-    <style>
-        .ticket-card {
-            transition: all 0.3s ease;
-        }
-
-        .ticket-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0.5rem 1.2rem rgba(0, 0, 0, 0.15);
-            background-color: #f9f9f9;
-        }
-
-        .ticket-card .card-header,
-        .ticket-card .card-footer {
-            transition: background-color 0.3s ease;
-        }
-
-        .ticket-card:hover .card-header {
-            background-color: #e9f2fa;
-        }
-
-        .ticket-card:hover .card-footer {
-            background-color: #f1f1f1;
-        }
-    </style>
-    <div class="row g-4 card-reserva">
+    <div class="row g-4">
         {% for reserva in reservas %}
             <div class="col-12 col-md-6 col-lg-4">
                 <a href="{% url 'reserva_detail' reserva.id %}" class="text-decoration-none">

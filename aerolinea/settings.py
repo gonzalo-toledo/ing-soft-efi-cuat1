@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
     
     #aplicaciones propias
     'aviones',
@@ -76,6 +77,7 @@ TEMPLATES = [
                 'home.context_processors.login_form',  # Custom context processor
                 'home.context_processors.register_form',  # Custom context processor
                 'vuelos.context_processors.aeropuertos_disponibles',  # Custom context processor0
+                'home.context_processors.pasajero_form',  # Custom context processor
             ],
         },
     },

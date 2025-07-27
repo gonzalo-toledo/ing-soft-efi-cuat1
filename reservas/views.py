@@ -157,7 +157,11 @@ class ReservaConfirmarPagoView(View):
             reserva.estado = 'Confirmada'
             reserva.save()
             reserva.generar_boleto()
+            
+            #obtengo el boleto para luego redirigir
+            # boleto = Boleto.objects.get(reserva=reserva)
             messages.success(request, "Pago confirmado y boleto generado correctamente.")
+            # return redirect(reverse_lazy('boleto_detail', boleto_id=boleto.id))
         else:
             messages.info(request, "La reserva ya estaba confirmada.")
 

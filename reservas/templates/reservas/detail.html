@@ -16,8 +16,13 @@
       <a class="btn btn-success" href="{% url 'reserva_confirmar_pago' reserva.id %}">Confirmar Pago</a>
     {% endif %}
 
-    <a class="btn btn-outline-danger" href="{% url 'reserva_cancelar' reserva.id %}">Cancelar</a>
-    <a class="btn btn-secondary" href="{% url 'reserva_list' %}">Volver</a>
+    <a class="btn btn-outline-danger" href="{% url 'reserva_cancelar' reserva.id %}">Cancelar reserva</a>
   </div>
 </div>
+<!-- Enlaces -->
+    <div class="card mt-4 border-0 shadow">
+        <div class="card-body d-flex flex-wrap gap-3 justify-content-between">
+            <a href="{% url 'reserva_list' %}" class="btn btn-outline-primary btn-md rounded-pill"><i class="bi bi-arrow-left"></i> Volver</a>
+        </div>
+    </div>
 {% endblock %}

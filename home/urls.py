@@ -1,5 +1,5 @@
 from django.urls import path, include
-from home.views import HomeView, RegisterView, LogoutView, LoginView
+from home.views import HomeView, RegisterView, LogoutView, LoginView, PerfilView
 
 urlpatterns = [
     path(route='', 
@@ -17,6 +17,10 @@ urlpatterns = [
     path(route='logout/',
         view=LogoutView.as_view(),
         name='logout',
+    ),
+    path(route='perfil/',
+        view=PerfilView.as_view(),
+        name='perfil',
     ),
     path('i18n/', include('django.conf.urls.i18n')), 
 ]

@@ -48,6 +48,26 @@ footer a:hover {
     color: rgba(255, 255, 255, 1);
 }
 
+/* perfil usuario style */
+.bg-perfil {
+    background-image: url('/static/img/bg-feature-card-3.jpeg'); 
+    background-size: cover;
+    background-position: center center;
+}
+
+/* modals styles */
+.modal-content {
+    background-color: transparent; 
+    border: none;
+}
+
+.modal-body{
+    background-image: url('/static/img/login_bg3.png'); 
+    background-size: cover;
+    background-position: center top;
+    padding: 2rem;
+    border-radius: 1rem;
+}
 
 /* index page styles */
 .feature-icon {
@@ -255,4 +275,29 @@ footer a:hover {
     color: #721c24;
     cursor: not-allowed;
     opacity: 0.7;
+}
+
+/* tikets-cards */
+
+.ticket-card {
+    transition: all 0.3s ease;
+}
+
+.ticket-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1.2rem rgba(0, 0, 0, 0.15);
+    background-color: #f9f9f9;
+}
+
+.ticket-card .card-header,
+.ticket-card .card-footer {
+    transition: background-color 0.3s ease;
+}
+
+.ticket-card:hover .card-header {
+    background-color: #e9f2fa;
+}
+
+.ticket-card:hover .card-footer {
+    background-color: #f1f1f1;
 }

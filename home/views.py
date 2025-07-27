@@ -4,7 +4,27 @@ from home.forms import LoginForm, RegisterForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from pasajeros.models import Pasajero
+from reservas.models import Reserva
+from pasajeros.forms import PasajeroForm
+
 # Create your views here.
+
+class PerfilView(View):
+    def get(self, request):
+        pasajeros = Pasajero.objects.filter(usuario=request.user)      
+        reservas = Reserva.objects.filter(pasajero__in=pasajeros).select_related('vuelo', 'pasajero', 'asiento')
+        reservas_vuelos_aterrizados = reservas.filter(vuelo__estado='Aterrizado').order_by('-vuelo__fecha_salida')
+        form = PasajeroForm()
+        return render(
+            request, 
+            'account/perfil.html',
+            {
+                'pasajeros': pasajeros,
+                'reservas_vuelos_aterrizados': reservas_vuelos_aterrizados,
+                'form': form,
+            }
+        )
 
 class HomeView(View):
     def get(self, request):
@@ -15,12 +35,7 @@ class HomeView(View):
 
 class RegisterView(View):
     def get(self, request):
-        form = RegisterForm()
-        return render(
-            request,
-            'account/register.html',
-            {'form': form}
-        )
+        return render(request)
     def post(self, request):
         form = RegisterForm(request.POST)
         next_url = request.POST.get('next') or request.META.get('HTTP_REFERER') or 'index'
@@ -38,42 +53,7 @@ class RegisterView(View):
                 for error in errors:
                     messages.error(request, f"{form.fields[field].label}: {error}" if field in form.fields else error)
 
-            return render(request, 'account/register.html', {'form': form})
-            
-# class LoginView(View):
-#     def get(self, request):
-#         form = LoginForm()
-#         return render(
-#             request,
-#             'account/login.html',
-#             {'form': form}
-#         )
-    
-#     def post(self, request):
-#         form = LoginForm(request.POST)
-#         if form.is_valid():
-#             username = form.cleaned_data.get('username')
-#             password = form.cleaned_data.get('password')
-            
-#             user = authenticate ( 
-#                 request,
-#                 username = username,
-#                 password = password
-#             )
-#             if user is not None:
-#                 login(request, user)
-#                 return redirect('index')
-#             else:
-#                 messages.error(request, 'Usuario o contrase')
-#                 return redirect('login')
-#         else:
-#             # Este bloque toma los errores del formulario y los agrega al sistema de mensajes
-#             for field, errors in form.errors.items():
-#                 for error in errors:
-#                     messages.error(request, f"{form.fields[field].label}: {error}" if field in form.fields else error)
-
-#             return render(request, 'account/login.html', {'form': form})
-        
+            return render(request)
 
 class LoginView(View):
     def get(self, request):

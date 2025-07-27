@@ -153,7 +153,7 @@ class ReservaConfirmarPagoView(View):
     def post(self, request, reserva_id):
         reserva = get_object_or_404(Reserva, id=reserva_id)
 
-        if reserva.estado != 'Confirmada':
+        if reserva.estado != 'Confirmada' and reserva.estado != 'Cancelada':
             reserva.estado = 'Confirmada'
             reserva.save()
             reserva.generar_boleto()
@@ -162,6 +162,8 @@ class ReservaConfirmarPagoView(View):
             # boleto = Boleto.objects.get(reserva=reserva)
             messages.success(request, "Pago confirmado y boleto generado correctamente.")
             # return redirect(reverse_lazy('boleto_detail', boleto_id=boleto.id))
+        elif reserva.estado == 'Cancelada':
+            messages.error(request, "La reserva ya estaba cancelada.")
         else:
             messages.info(request, "La reserva ya estaba confirmada.")
 
@@ -175,19 +177,23 @@ class ReservaCancelView(View):
 
     def post(self, request, *args, **kwargs):
         reserva = get_object_or_404(Reserva, pk=kwargs['reserva_id'])
-        reserva.estado = 'Cancelada'
-        reserva.activa = False
-        reserva.save()
+        if reserva.estado in ['Pendiente', 'Confirmada']:
+            reserva.estado = 'Cancelada'
+            reserva.activa = False
+            reserva.save()
+        
+            try:
+                boleto = Boleto.objects.get(reserva=reserva)
+                boleto.estado = 'Anulado'
+                boleto.save()
+            except Boleto.DoesNotExist:
+                pass
 
-        try:
-            boleto = Boleto.objects.get(reserva=reserva)
-            boleto.estado = 'Anulado'
-            boleto.save()
-        except Boleto.DoesNotExist:
-            pass
-
-        messages.success(request, "Reserva y boleto cancelados correctamente.")
-        return redirect(reverse_lazy('reserva_list'))
+            messages.success(request, "Reserva y boleto cancelados correctamente.")
+            return redirect(reverse_lazy('reserva_list'))
+        else:
+            messages.error(request, "La reserva ya estaba cancelada y no se puede modificar.")
+            return redirect(reverse_lazy('reserva_list'))
 
 
 # ==== BOLETOS ====

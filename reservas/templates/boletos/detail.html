@@ -9,6 +9,11 @@
     <p><strong>Estado:</strong> {{ boleto.estado }}</p>
     <p><strong>Fecha de Emisión:</strong> {{ boleto.fecha_emision }}</p>
   </div>
+  <div>
+    <a href="{% url 'boleto_pdf' boleto.id %}" class="btn btn-outline-danger btn-sm rounded-pill">
+      <i class="bi bi-file-earmark-pdf"></i> Descargar PDF
+    </a>
+  </div>
 </div>
 <!-- Enlaces -->
     <div class="card mt-4 border-0 shadow">

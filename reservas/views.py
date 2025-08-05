@@ -12,7 +12,6 @@ from django.template.loader import render_to_string
 from weasyprint import HTML
 from django.templatetags.static import static
 
-from weasyprint import HTML
 import tempfile
 # ==== RESERVAS ====
 

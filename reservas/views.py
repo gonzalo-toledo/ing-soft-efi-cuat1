@@ -1,12 +1,16 @@
-from django.contrib import messages
-from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, ListView, View
-from django.shortcuts import get_object_or_404, redirect, render
-from reservas.models import Reserva, Boleto
-from reservas.forms import ReservaForm
-from vuelos.models import Vuelo
 from aviones.models import Asiento
 from pasajeros.forms import PasajeroForm
+from vuelos.models import Vuelo
+
+from django.conf import settings
+from django.contrib import messages
+from django.core.mail import EmailMessage
+from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import render_to_string
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DetailView, ListView, View
+from reservas.forms import ReservaForm
+from reservas.models import Boleto, Reserva
 
 # ==== RESERVAS ====
 
@@ -157,11 +161,46 @@ class ReservaConfirmarPagoView(View):
             reserva.estado = 'Confirmada'
             reserva.save()
             reserva.generar_boleto()
-            
-            #obtengo el boleto para luego redirigir
-            # boleto = Boleto.objects.get(reserva=reserva)
-            messages.success(request, "Pago confirmado y boleto generado correctamente.")
-            # return redirect(reverse_lazy('boleto_detail', boleto_id=boleto.id))
+
+            try:
+                boleto = Boleto.objects.get(reserva=reserva)
+            except Boleto.DoesNotExist:
+                messages.error(request, "No se pudo encontrar el boleto generado.")
+                return redirect(reverse_lazy('reserva_detail', kwargs={'reserva_id': reserva.id}))
+
+            # Obtenemos los datos directamente del pasajero
+            username = reserva.pasajero.nombre
+            email_destino = reserva.pasajero.email
+
+            if not email_destino or not username:
+                messages.error(request, "Faltan datos del usuario para enviar el email.")
+                return redirect(reverse_lazy('reserva_detail', kwargs={'reserva_id': reserva.id}))
+
+            # Renderizamos el contenido HTML del email
+            message = render_to_string(
+                'emails/boleto.html',
+                {
+                    'username': username,
+                    'email': email_destino,
+                    'boleto': boleto,
+                }
+            )
+
+            # Creamos y enviamos el email
+            email = EmailMessage(
+                subject='Skyway - Confirmación de Pago y Boleto Emitido',
+                body=message,
+                from_email=settings.EMAIL_HOST_USER,
+                to=[email_destino]
+            )
+            email.content_subtype = 'html'
+
+            try:
+                email.send(fail_silently=False)
+                messages.success(request, "Pago confirmado, boleto generado y email enviado.")
+            except Exception as e:
+                messages.warning(request, f"El boleto fue generado, pero ocurrió un error al enviar el mail: {e}")
+
         elif reserva.estado == 'Cancelada':
             messages.error(request, "La reserva ya estaba cancelada.")
         else:

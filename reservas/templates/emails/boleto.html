@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de boleto</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+            <td align="center" style="padding: 20px 0;">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+                    <tr style="background-color: #007BFF; color: white;">
+                        <td style="padding: 20px; text-align: center;">
+                            <h1 style="margin: 0; font-size: 24px;">Detalle Boleto</h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 30px;">
+                            <p style="font-size: 16px;">Hola <strong>{{ boleto.reserva.pasajero.apellido }}, {{ boleto.reserva.pasajero.nombre }}</strong></p>
+                            <p style="font-size: 16px;">Te enviamos la información de tu boleto de reserva.</p>
+                            <table style="width: 100%; font-size: 15px; margin-top: 15px;">
+                                <tr>
+                                    <td><strong>Código de Boleto:</strong></td>
+                                    <td>{{ boleto.codigo_barra }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Fecha de Emisión:</strong></td>
+                                    <td>{{ boleto.fecha_emision }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Reserva:</strong></td>
+                                    <td>{{ boleto.reserva }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Estado:</strong></td>
+                                    <td>{{ boleto.estado }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Fecha de Reserva:</strong></td>
+                                    <td>{{ boleto.reserva.fecha_reserva }}</td>
+                                </tr>
+                            </table>
+                            <p style="margin-top: 30px;">Atentamente,<br><strong>Skyway</strong></p>
+                        </td>
+                    </tr>
+                    <tr style="background-color: #f1f1f1;">
+                        <td style="padding: 15px; text-align: center; font-size: 12px; color: #666;">
+                            © Skyway. Todos los derechos reservados.
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

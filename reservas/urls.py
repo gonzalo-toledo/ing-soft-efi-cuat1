@@ -3,6 +3,7 @@ from django.urls import path
 from reservas.views import (
     BoletoDetailView,
     BoletoListView,
+    BoletoPDFView,
     ReservaCancelView,
     ReservaCreateView,
     ReservaDetailView,
@@ -49,4 +50,10 @@ urlpatterns = [
         BoletoDetailView.as_view(),
         name="boleto_detail"
     ),
+    path(
+        "boletos/<int:boleto_id>/descargar-pdf/",
+        BoletoPDFView.as_view(),
+        name="boleto_pdf"
+    ),
+    
 ]

@@ -10,8 +10,17 @@ from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, View
 from reservas.forms import ReservaForm
+from vuelos.models import Vuelo
+from aviones.models import Asiento
+from pasajeros.forms import PasajeroForm
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from weasyprint import HTML
+from django.templatetags.static import static
 from reservas.models import Boleto, Reserva
 
+from weasyprint import HTML
+import tempfile
 # ==== RESERVAS ====
 
 class ReservaListView(ListView):
@@ -263,3 +272,30 @@ class BoletoDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['reserva'] = self.object.reserva
         return context
+    
+
+
+class BoletoPDFView(View):
+    def get(self, request, boleto_id):
+        boleto = get_object_or_404(Boleto, pk=boleto_id)
+
+        # Construir la URL absoluta de la imagen de fondo
+        bg_relative_url = static('img/bg-boleto.png')  # Usa tu ruta real dentro de /static/
+        bg_url = request.build_absolute_uri(bg_relative_url)
+
+        # Renderizar el HTML con la URL de fondo incluida
+        html_string = render_to_string('boletos/pdf_template.html', {
+            'boleto': boleto,
+            'bg_url': bg_url
+        })
+
+        # Crear PDF con WeasyPrint
+        with tempfile.NamedTemporaryFile(delete=True, suffix='.pdf') as temp_pdf:
+            HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(target=temp_pdf.name)
+            temp_pdf.seek(0)
+            pdf_data = temp_pdf.read()
+
+        # Devolver el PDF como respuesta HTTP
+        response = HttpResponse(pdf_data, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename=boleto_{boleto.id}.pdf'
+        return response

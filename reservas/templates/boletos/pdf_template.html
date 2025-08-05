@@ -1,0 +1,187 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Boleto {{ boleto.id }}</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica', sans-serif;
+        }
+
+        .ticket-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 10px;
+        }
+
+        .ticket-wrapper {
+            display: flex;
+            border: 2px dashed #333;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .main-content {
+            flex: 3;
+            padding: 30px;
+            background: #fff url('{{ bg_url }}') no-repeat center;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .stub {
+            flex: 1;
+            background-color: #f9f9f9;
+            border-left: 2px dashed #333;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .value {
+            font-size: 17px;
+            font-weight: bold;
+            color: #222;
+        }
+
+        .airport-code {
+            font-size: 34px;
+            font-weight: bold;
+            color: #1a1a1a;
+        }
+
+        .small {
+            font-size: 13px;
+            color: #444;
+            margin-bottom: 10px;
+        }
+
+        .flight-line {
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .barcode-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .barcode-img {
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .barcode-text {
+            font-size: 12px;
+            letter-spacing: 3px;
+            color: #222;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="ticket-container">
+        <div class="ticket-wrapper">
+            <!-- Contenido principal -->
+            <div class="main-content">
+                <div>
+                    <h2>Boleto de Vuelo</h2>
+
+                    <div class="section">
+                        <div class="label">Pasajero</div>
+                        <div class="value">{{ boleto.reserva.pasajero }}</div>
+                    </div>
+
+                    <div class="section flight-line">
+                        <div>
+                            <div class="label">Desde</div>
+                            <div class="airport-code">{{ boleto.reserva.vuelo.origen.codigo }}</div>
+                            <div class="small">{{ boleto.reserva.vuelo.origen.ciudad }}</div>
+                        </div>
+                        <div>
+                            <div class="label">Hacia</div>
+                            <div class="airport-code">{{ boleto.reserva.vuelo.destino.codigo }}</div>
+                            <div class="small">{{ boleto.reserva.vuelo.destino.ciudad }}</div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="label">Fecha de Salida</div>
+                        <div class="value">{{ boleto.reserva.vuelo.fecha_salida|date:"d/m/Y H:i" }}</div>
+                    </div>
+
+                    <div class="section">
+                        <div class="label">Asiento</div>
+                        <div class="value">{{ boleto.reserva.asiento.numero }}</div>
+                    </div>
+
+                    <div class="section">
+                        <div class="label">Clase</div>
+                        <div class="value">{{ boleto.reserva.asiento.tipo }}</div>
+                    </div>
+
+                    <div class="section">
+                        <div class="label">Emisión</div>
+                        <div class="value">{{ boleto.fecha_emision|date:"d/m/Y H:i" }}</div>
+                    </div>
+                </div>
+
+                <div class="barcode-block">
+                    <div class="barcode-text">{{ boleto.codigo_barra }}</div>
+                </div>
+            </div>
+
+            <!-- Troquel -->
+            <div class="stub">
+                <div>
+                    <div class="section">
+                        <div class="label">Pasajero</div>
+                        <div class="small">{{ boleto.reserva.pasajero }}</div>
+                    </div>
+
+                    <div class="section">
+                        <div class="label">Asiento</div>
+                        <div class="value">{{ boleto.reserva.asiento.numero }}</div>
+                    </div>
+
+                    <div class="section">
+                        <div class="label">Clase</div>
+                        <div class="small">{{ boleto.reserva.asiento.tipo }}</div>
+                    </div>
+                </div>
+
+                <div class="barcode-block">
+                    <div class="barcode-text">{{ boleto.codigo_barra }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,7 +1,6 @@
 from aviones.models import Asiento
 from pasajeros.forms import PasajeroForm
 from vuelos.models import Vuelo
-
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import EmailMessage
@@ -10,16 +9,11 @@ from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, View
 from reservas.forms import ReservaForm
-from vuelos.models import Vuelo
-from aviones.models import Asiento
-from pasajeros.forms import PasajeroForm
 from django.http import HttpResponse
-from django.template.loader import render_to_string
 from weasyprint import HTML
 from django.templatetags.static import static
 from reservas.models import Boleto, Reserva
 
-from weasyprint import HTML
 import tempfile
 # ==== RESERVAS ====
 

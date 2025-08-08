@@ -35,7 +35,8 @@ class HomeView(View):
 
 class RegisterView(View):
     def get(self, request):
-        return render(request)
+        return redirect(request.META.get('HTTP_REFERER', 'index'))
+    
     def post(self, request):
         form = RegisterForm(request.POST)
         next_url = request.POST.get('next') or request.META.get('HTTP_REFERER') or 'index'
@@ -48,13 +49,13 @@ class RegisterView(View):
             messages.success(request, 'Usuario registrado correctamente')
             return redirect(next_url)
         else:
-            # Este bloque toma los errores del formulario y los agrega al sistema de mensajes
             for field, errors in form.errors.items():
                 for error in errors:
-                    messages.error(request, f"{form.fields[field].label}: {error}" if field in form.fields else error)
-
-            return render(request)
-
+                    messages.error(
+                        request,
+                        f"{form.fields[field].label}: {error}" if field in form.fields else error
+                    )
+            return redirect(next_url)
 class LoginView(View):
     def get(self, request):
         return redirect('index')

@@ -153,3 +153,13 @@ EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
 EMAIL_HOST_USER = '2199fcf202146b'
 EMAIL_HOST_PASSWORD = '265440569aedee'
 EMAIL_PORT = '2525'
+
+
+import sentry_sdk
+
+sentry_sdk.init(
+    dsn="https://4833574afda07fb731abd2f148f120f8@o4509805686816768.ingest.us.sentry.io/4509805689176064",
+    # Add data like request headers and IP for users,
+    # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
+    send_default_pii=True,
+)

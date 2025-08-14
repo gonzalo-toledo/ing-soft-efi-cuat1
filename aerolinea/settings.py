@@ -153,3 +153,23 @@ EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
 EMAIL_HOST_USER = '2199fcf202146b'
 EMAIL_HOST_PASSWORD = '265440569aedee'
 EMAIL_PORT = '2525'
+
+
+import logging
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.logging import LoggingIntegration
+
+sentry_logging = LoggingIntegration(
+    level=logging.INFO, # Set to debug if you want full logging
+    event_level=logging.ERROR, # Set to error to only capture errors)
+)    
+
+sentry_sdk.init(
+    dsn="https://44949b9c3a67b2d12f016c20102078da@o4509805706084353.ingest.us.sentry.io/4509805727580161", #codigo unico para cada proyecto
+    send_default_pii=True,
+    integrations=[
+        DjangoIntegration(), 
+        sentry_logging,
+    ],
+)

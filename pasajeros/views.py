@@ -23,9 +23,13 @@ def crear_pasajero(request):
             messages.success(request, 'Pasajero creado correctamente')    
             return redirect(next_url)
         else:
-            messages.error(request, 'Formulario inválido')
-        
-        
-        form = PasajeroForm()
-        
-    return render(request, 'pasajeros/pasajero_create.html', {'pasajero_form': form})
+            # Agregar errores detallados del formulario
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(
+                        request,
+                        f"{form.fields[field].label}: {error}" if field in form.fields else error
+                    )
+            return redirect(next_url)
+
+    return redirect(request.META.get('HTTP_REFERER', 'index'))

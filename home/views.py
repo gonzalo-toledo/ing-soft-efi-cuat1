@@ -10,6 +10,11 @@ from pasajeros.forms import PasajeroForm
 
 # Create your views here.
 
+import logging
+logger = logging.getLogger(__name__)
+
+
+
 class PerfilView(View):
     def get(self, request):
         pasajeros = Pasajero.objects.filter(usuario=request.user)      
@@ -28,6 +33,11 @@ class PerfilView(View):
 
 class HomeView(View):
     def get(self, request):
+        logger.error(
+            'ingresando a view',
+            exc_info=True,
+            extra={"informacion": "inventada"}  
+        )
         return render(
             request, 
             'index.html'
@@ -35,7 +45,7 @@ class HomeView(View):
 
 class RegisterView(View):
     def get(self, request):
-        return render(request)
+        return redirect(request.META.get('HTTP_REFERER', 'index'))
     def post(self, request):
         form = RegisterForm(request.POST)
         next_url = request.POST.get('next') or request.META.get('HTTP_REFERER') or 'index'
@@ -51,9 +61,11 @@ class RegisterView(View):
             # Este bloque toma los errores del formulario y los agrega al sistema de mensajes
             for field, errors in form.errors.items():
                 for error in errors:
-                    messages.error(request, f"{form.fields[field].label}: {error}" if field in form.fields else error)
+                    messages.error(
+                        request, 
+                        f"{form.fields[field].label}: {error}" if field in form.fields else error)
 
-            return render(request)
+            return redirect(next_url)
 
 class LoginView(View):
     def get(self, request):
